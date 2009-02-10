@@ -29,6 +29,24 @@ Options::Options(QGraphicsWidget *parent)
       m_random(new Plasma::IconWidget(this)),
       m_loop(new Plasma::IconWidget(this))
 {
+   m_tracklist->setIcon("media-playback-start");
+   connect(m_tracklist, SIGNAL(clicked()), this, SLOT(playPauseClicked()));
+   m_tracklist->setMinimumSize(m_tracklist->sizeFromIconSize(16));
+
+   m_random->setIcon("media-playback-stop");
+   connect(m_random, SIGNAL(clicked()), this, SIGNAL(stop()));
+   m_random->setMinimumSize(m_random->sizeFromIconSize(16));
+
+   m_loop->setIcon("media-skip-backward");
+   connect(m_loop, SIGNAL(clicked()), this, SIGNAL(previous()));
+   m_loop->setMinimumSize(m_loop->sizeFromIconSize(16));
+
+   QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+   layout->setOrientation(Qt::Vertical);
+   layout->addItem(m_tracklist);
+   layout->addItem(m_random);
+   layout->addItem(m_loop);
+   setLayout(layout);
 }
 
 Options::~Options()

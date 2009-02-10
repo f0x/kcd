@@ -40,6 +40,7 @@ namespace Plasma {
 
 class InfoPanel;
 class Controls;
+class Options;
 class MBManager;
 
 // here we define the applet
@@ -65,6 +66,7 @@ class Kcd : public Plasma::PopupApplet
     private:
        InfoPanel* m_textPanel;
        Controls* m_buttonPanel;
+       Options* m_optionsPanel;
        Plasma::Slider* m_positionSlider;
        Phonon::MediaObject* m_mediaObject;
        Phonon::AudioOutput* m_audioOutput;

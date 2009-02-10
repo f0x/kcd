@@ -19,6 +19,7 @@
 #include "infopanel.h"
 #include "controls.h"
 #include "cdhandler.h"
+#include "options.h"
 #include "mbmanager.h"
 
 #include <QGraphicsGridLayout>
@@ -42,10 +43,11 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
     : Plasma::PopupApplet(parent, args),
       m_textPanel(new InfoPanel),
       m_buttonPanel(new Controls),
+      m_optionsPanel(new Options),
       m_positionSlider(new Plasma::Slider(this))
 {
     //setBackgroundHints(DefaultBackground);
-    resize(300, 200); // ideal planar size
+    resize(340, 230); // ideal planar size
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     m_textPanel->show();
     QGraphicsGridLayout* layout = new QGraphicsGridLayout();
@@ -54,6 +56,8 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
     m_buttonPanel->setDisplayedButtons(Controls::AllButtons);
     layout->addItem(m_buttonPanel, 1, 0);
     layout->addItem(m_positionSlider, 2, 0);
+    m_optionsPanel->show();
+    layout->addItem(m_optionsPanel, 0, 1);
     setLayout(layout);
 
     m_positionSlider->setOrientation(Qt::Horizontal);
@@ -140,7 +144,6 @@ void Kcd::setupActions()
     connect(m_buttonPanel, SIGNAL(previous()), this, SLOT(prev()));
     connect(m_buttonPanel, SIGNAL(next()), this, SLOT(next()));
     connect(m_positionSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekTo(int)));
-    connect(m_positionSlider, SIGNAL(sliderReleased()), this, SLOT(seekTo()));
 }
 
 void Kcd::updateSlider(qint64 seconds)
