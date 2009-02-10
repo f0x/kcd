@@ -38,10 +38,11 @@ public:
     ~InfoPanel();
 
 public slots:
-   // void updateMetadata(const QMap<QString,QString>& metadata);
+   void updateMetadata(const QMap<QString,QString>& metadata);
+   void setCurrentTime(const QString &);
 
 private:
-    //void updateLabels();
+    void updateLabels();
 
     Plasma::Label* m_artistLabel;
     Plasma::Label* m_titleLabel;

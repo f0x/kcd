@@ -19,9 +19,11 @@
 #include "infopanel.h"
 #include "controls.h"
 #include "cdhandler.h"
+#include "mbmanager.h"
 
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
+#include <QTime>
 
 #include <Phonon/MediaSource>
 #include <Phonon/MediaObject>
@@ -30,6 +32,8 @@
 
 // Plasma
 #include <Plasma/Theme>
+#include <Plasma/Slider>
+#include <Plasma/Label>
 
 #include <KDebug>
 
@@ -37,7 +41,8 @@
 Kcd::Kcd(QObject *parent, const QVariantList &args)
     : Plasma::PopupApplet(parent, args),
       m_textPanel(new InfoPanel),
-      m_buttonPanel(new Controls)
+      m_buttonPanel(new Controls),
+      m_positionSlider(new Plasma::Slider(this))
 {
     //setBackgroundHints(DefaultBackground);
     resize(300, 200); // ideal planar size
@@ -47,14 +52,26 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
     m_buttonPanel->show();
     m_buttonPanel->setDisplayedButtons(Controls::AllButtons);
     layout->addItem(m_buttonPanel, 1, 0);
+    layout->addItem(m_positionSlider, 2, 0);
     setLayout(layout);
+
+    m_positionSlider->setOrientation(Qt::Horizontal);
+    m_positionSlider->setMinimum(0);
+    m_positionSlider->setMaximum(0);
+    m_positionSlider->setValue(0);
+
+    m_positionSlider->setEnabled(false);
 
     m_mediaObject = new Phonon::MediaObject(this);
     m_audioOutput = new Phonon::AudioOutput(Phonon::NoCategory, this);
     m_mediaController = new Phonon::MediaController(m_mediaObject);
     Phonon::createPath(m_mediaObject, m_audioOutput);
+    m_mediaObject->setTickInterval(1000);
 
-    //connect (m_mediaObject, SIGNAL(metaDataChanged()), this, SLOT(metaData()));
+    /** Music Brainz initialisation */
+    m_MBManager = new MBManager();
+
+    connect (m_mediaObject, SIGNAL(metaDataChanged()), this, SLOT(metaData()));
 
     CdHandler *handler = new CdHandler(this);
     connect (handler, SIGNAL(cdInserted(const Phonon::MediaSource&)),
@@ -80,16 +97,7 @@ void Kcd::init()
 
 void Kcd::retrieveInformations()
 {
-   //QMultiMap<QString, QString> cdData = m_mediaObject->metaData();
-   //kDebug() << cdData;
-   QStringList titles;
-   kDebug() << QString::number(m_mediaController->availableTitles());
-   for (int i = 1; i <= m_mediaController->availableTitles(); i++) {
-       m_mediaController->nextTitle();
-       titles << m_mediaObject->metaData(Phonon::TitleMetaData);
-//        kDebug() << titles[i];
-    }
-    kDebug() << titles;
+    m_MBManager->discLookup();
 }
 
 void Kcd::play()
@@ -110,12 +118,16 @@ void Kcd::stop()
 
 void Kcd::prev()
 {
-   m_mediaController->previousTitle();
+   if (m_mediaController->currentTitle() > 1) {
+      m_mediaController->previousTitle();
+   }
 }
 
 void Kcd::next()
 {   
-   m_mediaController->nextTitle();
+   if (m_mediaController->currentTitle() != m_mediaController->availableTitles()) {
+      m_mediaController->nextTitle();
+   }
 }
 
 void Kcd::setupActions()
@@ -125,14 +137,39 @@ void Kcd::setupActions()
     connect(m_buttonPanel, SIGNAL(stop()), this, SLOT(stop()));
     connect(m_buttonPanel, SIGNAL(previous()), this, SLOT(prev()));
     connect(m_buttonPanel, SIGNAL(next()), this, SLOT(next()));
+    connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(currentTime(qint64)));
     //connect(this, SIGNAL(stateChanged(State)),
     //        m_buttonPanel, SLOT(stateChanged(State)));
 }
 
+void Kcd::currentTime(qint64 mstime)
+{
+    //kDebug() << QString::number(mstime/1000);
+    QTime time;
+    time = time.addMSecs(mstime);
+    //kDebug() << time.toString("mm:ss");
+
+    QTime totalTime;
+    totalTime = totalTime.addMSecs(m_mediaObject->totalTime());
+
+    m_textPanel->setCurrentTime(time.toString("mm:ss") + " / " + totalTime.toString("mm:ss"));
+}
+
 void Kcd::metaData()
 {   
-   
-   retrieveInformations();
+    // kDebug() << QString::number((m_mediaObject->totalTime())/1000);
+
+    QMap<QString, QString> metaData;
+    const MBTrackInfo trackInfo = m_MBManager->getTrackList()[(m_mediaController->currentTitle()) - 1];
+
+    metaData["Artist"] = trackInfo.Artist;
+    metaData["Title"] = QString::number(m_mediaController->currentTitle()) + " - " + trackInfo.Title;
+//     metaData["Time"] = trackInfo.Duration;
+    metaData["Album"] = m_MBManager->getDiscInfo().Title;
+
+    m_textPanel->updateMetadata(metaData);
+
+   //retrieveInformations();
 }
 
 K_EXPORT_PLASMA_APPLET(kcd, Kcd)

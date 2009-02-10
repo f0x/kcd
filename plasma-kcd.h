@@ -26,7 +26,6 @@
 
 #include <Plasma/PopupApplet>
 #include <Plasma/Svg>
-#include <plasma/service.h>
 
 namespace Phonon {
     class MediaSource;
@@ -35,8 +34,13 @@ namespace Phonon {
     class MediaController;
 };
 
+namespace Plasma {
+    class Slider;
+}
+
 class InfoPanel;
 class Controls;
+class MBManager;
 
 // here we define the applet
 class Kcd : public Plasma::PopupApplet
@@ -61,17 +65,18 @@ class Kcd : public Plasma::PopupApplet
     private:
        InfoPanel* m_textPanel;
        Controls* m_buttonPanel;
+       Plasma::Slider* m_positionSlider;
        Phonon::MediaObject* m_mediaObject;
        Phonon::AudioOutput* m_audioOutput;
        Phonon::MediaController* m_mediaController;
-
-       QStringList m_titles;
+       MBManager* m_MBManager;
 
 
     private slots:
        void handleCd(const Phonon::MediaSource &);
        void metaData();
        void retrieveInformations();
+       void currentTime(qint64);
 
     signals:
        //void stateChanged(State state);
