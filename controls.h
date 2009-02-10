@@ -1,5 +1,6 @@
 /*
  * Copyright 2008  Alex Merry <alex.merry@kdemail.net>
+ * Copyright 2009  Francesco Grieco <fgrieco@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
+
 #ifndef CONTROLS_H
 #define CONTROLS_H
 
@@ -43,7 +45,15 @@ public:
         NextButton = 8,
         AllButtons = 15
     };
-    Q_DECLARE_FLAGS(Buttons, Button)
+
+enum State
+    {
+        Playing = 0,
+        Paused,
+        Stopped
+    };
+
+    Q_DECLARE_FLAGS( Buttons, Button )
 
     Controls(QGraphicsWidget *parent = 0);
     ~Controls();
@@ -73,7 +83,7 @@ private:
 
     QGraphicsLinearLayout* m_layout;
 
-    //State m_state;
+    State m_state;
     //Plasma::Service* m_controller;
 };
 

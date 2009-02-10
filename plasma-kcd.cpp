@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008 by Francesco Grieco <fgrieco@gmail.com>
+ *  Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>
 
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
@@ -48,9 +48,9 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
     layout->addItem(m_buttonPanel, 1, 0);
     setLayout(layout);
 
-    mediaObject = new Phonon::MediaObject(this);
-    audioOutput = new Phonon::AudioOutput(Phonon::NoCategory, this);
-    Phonon::createPath(mediaObject, audioOutput);
+    m_mediaObject = new Phonon::MediaObject(this);
+    m_audioOutput = new Phonon::AudioOutput(Phonon::NoCategory, this);
+    Phonon::createPath(m_mediaObject, m_audioOutput);
 
 
     CdHandler *handler = new CdHandler(this);
@@ -65,7 +65,7 @@ Kcd::~Kcd()
 
 void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
 {
-   mediaObject->setCurrentSource(mediaSource);
+   m_mediaObject->setCurrentSource(mediaSource);
 }
 
 void Kcd::init()
@@ -75,16 +75,18 @@ void Kcd::init()
 
 void Kcd::play()
 {
-   kDebug() << "PLAY";
-   mediaObject->play();
-   kDebug() << mediaObject->errorString();
+   m_mediaObject->play();
 }
 
 void Kcd::pause()
-{}
+{
+   m_mediaObject->pause();
+}
 
 void Kcd::stop()
-{}
+{
+   m_mediaObject->stop();
+}
 
 void Kcd::prev()
 {}

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008 by Francesco Grieco <fgrieco@gmail.com>
+ *  Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>
 
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
@@ -60,8 +60,8 @@ class Kcd : public Plasma::PopupApplet
     private:
        InfoPanel* m_textPanel;
        Controls* m_buttonPanel;
-       Phonon::MediaObject *mediaObject;
-       Phonon::AudioOutput *audioOutput;
+       Phonon::MediaObject* m_mediaObject;
+       Phonon::AudioOutput* m_audioOutput;
 
     private slots:
        void handleCd(const Phonon::MediaSource &);
