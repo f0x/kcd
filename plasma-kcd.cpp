@@ -1,6 +1,6 @@
 /*
  *  Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>
-
+ *  Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
  *  published by the Free Software Foundation; either version 2 of
@@ -60,7 +60,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
     m_positionSlider->setMaximum(0);
     m_positionSlider->setValue(0);
 
-    m_positionSlider->setEnabled(false);
+    //m_positionSlider->setEnabled(false);
 
     m_mediaObject = new Phonon::MediaObject(this);
     m_audioOutput = new Phonon::AudioOutput(Phonon::NoCategory, this);
@@ -68,10 +68,8 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
     Phonon::createPath(m_mediaObject, m_audioOutput);
     m_mediaObject->setTickInterval(1000);
 
-    /** Music Brainz initialisation */
+    /** Music Brainz initialisation **/
     m_MBManager = new MBManager();
-
-    connect (m_mediaObject, SIGNAL(metaDataChanged()), this, SLOT(metaData()));
 
     CdHandler *handler = new CdHandler(this);
     connect (handler, SIGNAL(cdInserted(const Phonon::MediaSource&)),
@@ -132,15 +130,29 @@ void Kcd::next()
 
 void Kcd::setupActions()
 {
+    connect(m_mediaObject, SIGNAL(metaDataChanged()), this, SLOT(metaData()));
+    connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(updateSlider(qint64)));
+    connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(currentTime(qint64)));
     connect(m_buttonPanel, SIGNAL(play()), this, SLOT(play()));
     connect(m_buttonPanel, SIGNAL(pause()), this, SLOT(pause()));
     connect(m_buttonPanel, SIGNAL(stop()), this, SLOT(stop()));
     connect(m_buttonPanel, SIGNAL(previous()), this, SLOT(prev()));
     connect(m_buttonPanel, SIGNAL(next()), this, SLOT(next()));
-    connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(currentTime(qint64)));
-    //connect(this, SIGNAL(stateChanged(State)),
-    //        m_buttonPanel, SLOT(stateChanged(State)));
+    connect(m_positionSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekTo(int)));
+    connect(m_positionSlider, SIGNAL(sliderReleased()), this, SLOT(seekTo()));
 }
+
+void Kcd::updateSlider(qint64 seconds)
+{
+    m_positionSlider->setValue(seconds / 1000);
+}
+
+void Kcd::seekTo(int value)
+{
+    //kDebug() << QString::number(m_positionSlider->value());
+    m_mediaObject->seek(value * 1000);
+}
+
 
 void Kcd::currentTime(qint64 mstime)
 {
@@ -159,6 +171,8 @@ void Kcd::metaData()
 {   
     // kDebug() << QString::number((m_mediaObject->totalTime())/1000);
 
+    m_positionSlider->setValue(0);
+
     QMap<QString, QString> metaData;
     const MBTrackInfo trackInfo = m_MBManager->getTrackList()[(m_mediaController->currentTitle()) - 1];
 
@@ -169,7 +183,8 @@ void Kcd::metaData()
 
     m_textPanel->updateMetadata(metaData);
 
-   //retrieveInformations();
+    m_positionSlider->setMaximum(m_mediaObject->totalTime() / 1000);
+    kDebug() << QString::number(m_mediaObject->totalTime() / 1000);
 }
 
 K_EXPORT_PLASMA_APPLET(kcd, Kcd)
