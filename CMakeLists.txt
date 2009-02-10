@@ -20,6 +20,7 @@ set(kcd_SRCS plasma-kcd.cpp
              controls.cpp
              cdhandler.cpp
              mbmanager.cpp
+             options.cpp
 )
 
 # Now make sure all files get to the right place

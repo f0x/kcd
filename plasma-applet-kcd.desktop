@@ -3,7 +3,7 @@ Name=Kcd
 Name[it]=Player cd
 Comment=Quick cd player
 Type=Service
-Icon=
+Icon=media-optical-audio
 
 X-KDE-ServiceTypes=Plasma/Applet
 X-KDE-Library=plasma_applet_kcd

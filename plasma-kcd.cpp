@@ -46,6 +46,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
 {
     //setBackgroundHints(DefaultBackground);
     resize(300, 200); // ideal planar size
+    setAspectRatioMode(Plasma::IgnoreAspectRatio);
     m_textPanel->show();
     QGraphicsGridLayout* layout = new QGraphicsGridLayout();
     layout->addItem(m_textPanel, 0, 0);
@@ -184,7 +185,7 @@ void Kcd::metaData()
     m_textPanel->updateMetadata(metaData);
 
     m_positionSlider->setMaximum(m_mediaObject->totalTime() / 1000);
-    kDebug() << QString::number(m_mediaObject->totalTime() / 1000);
+    //kDebug() << QString::number(m_mediaObject->totalTime() / 1000);
 }
 
 K_EXPORT_PLASMA_APPLET(kcd, Kcd)
