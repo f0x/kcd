@@ -47,7 +47,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
       m_positionSlider(new Plasma::Slider(this))
 {
     //setBackgroundHints(DefaultBackground);
-    resize(340, 230); // ideal planar size
+    resize(340, 225); // ideal planar size
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     m_textPanel->show();
     QGraphicsGridLayout* layout = new QGraphicsGridLayout();
@@ -117,19 +117,23 @@ void Kcd::stop()
 {
    m_mediaObject->stop();
    m_buttonPanel->stateChanged(Controls::Paused);
+   currentTime(0);
 }
 
 void Kcd::prev()
 {
    if (m_mediaController->currentTitle() > 1) {
       m_mediaController->previousTitle();
+      currentTime(0);
    }
+
 }
 
 void Kcd::next()
 {   
    if (m_mediaController->currentTitle() != m_mediaController->availableTitles()) {
       m_mediaController->nextTitle();
+      currentTime(0);
    }
 }
 
@@ -188,7 +192,7 @@ void Kcd::metaData()
     m_textPanel->updateMetadata(metaData);
 
     m_positionSlider->setMaximum(m_mediaObject->totalTime() / 1000);
-    //kDebug() << QString::number(m_mediaObject->totalTime() / 1000);
+    currentTime(0);
 }
 
 K_EXPORT_PLASMA_APPLET(kcd, Kcd)
