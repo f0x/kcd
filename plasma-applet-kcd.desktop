@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Kcd
+Name[it]=Player cd
+Comment=Quick cd player
+Type=Service
+Icon=
+
+X-KDE-ServiceTypes=Plasma/Applet
+X-KDE-Library=plasma_applet_kcd
+X-KDE-PluginInfo-Author=Francesco Grieco
+X-KDE-PluginInfo-Email=fgrieco@gmail.com
+X-KDE-PluginInfo-Name=kcd
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=
+X-KDE-PluginInfo-Category=Utilities
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnableByDefault=true
