@@ -32,6 +32,7 @@ namespace Phonon {
     class MediaSource;
     class MediaObject;
     class AudioOutput;
+    class MediaController;
 };
 
 class InfoPanel;
@@ -62,10 +63,18 @@ class Kcd : public Plasma::PopupApplet
        Controls* m_buttonPanel;
        Phonon::MediaObject* m_mediaObject;
        Phonon::AudioOutput* m_audioOutput;
+       Phonon::MediaController* m_mediaController;
+
+       QStringList m_titles;
+
 
     private slots:
        void handleCd(const Phonon::MediaSource &);
+       void metaData();
+       void retrieveInformations();
 
+    signals:
+       //void stateChanged(State state);
 };
 
 #endif

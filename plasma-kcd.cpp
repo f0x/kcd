@@ -26,6 +26,7 @@
 #include <Phonon/MediaSource>
 #include <Phonon/MediaObject>
 #include <Phonon/AudioOutput>
+#include <Phonon/MediaController>
 
 // Plasma
 #include <Plasma/Theme>
@@ -50,8 +51,10 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
 
     m_mediaObject = new Phonon::MediaObject(this);
     m_audioOutput = new Phonon::AudioOutput(Phonon::NoCategory, this);
+    m_mediaController = new Phonon::MediaController(m_mediaObject);
     Phonon::createPath(m_mediaObject, m_audioOutput);
 
+    //connect (m_mediaObject, SIGNAL(metaDataChanged()), this, SLOT(metaData()));
 
     CdHandler *handler = new CdHandler(this);
     connect (handler, SIGNAL(cdInserted(const Phonon::MediaSource&)),
@@ -66,11 +69,27 @@ Kcd::~Kcd()
 void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
 {
    m_mediaObject->setCurrentSource(mediaSource);
+   //kDebug() << QString::number(m_mediaController->availableTitles());
+   retrieveInformations();
 }
 
 void Kcd::init()
 {
    setupActions();
+}
+
+void Kcd::retrieveInformations()
+{
+   //QMultiMap<QString, QString> cdData = m_mediaObject->metaData();
+   //kDebug() << cdData;
+   QStringList titles;
+   kDebug() << QString::number(m_mediaController->availableTitles());
+   for (int i = 1; i <= m_mediaController->availableTitles(); i++) {
+       m_mediaController->nextTitle();
+       titles << m_mediaObject->metaData(Phonon::TitleMetaData);
+//        kDebug() << titles[i];
+    }
+    kDebug() << titles;
 }
 
 void Kcd::play()
@@ -86,13 +105,18 @@ void Kcd::pause()
 void Kcd::stop()
 {
    m_mediaObject->stop();
+   m_buttonPanel->stateChanged(Controls::Paused);
 }
 
 void Kcd::prev()
-{}
+{
+   m_mediaController->previousTitle();
+}
 
 void Kcd::next()
-{}
+{   
+   m_mediaController->nextTitle();
+}
 
 void Kcd::setupActions()
 {
@@ -101,6 +125,14 @@ void Kcd::setupActions()
     connect(m_buttonPanel, SIGNAL(stop()), this, SLOT(stop()));
     connect(m_buttonPanel, SIGNAL(previous()), this, SLOT(prev()));
     connect(m_buttonPanel, SIGNAL(next()), this, SLOT(next()));
+    //connect(this, SIGNAL(stateChanged(State)),
+    //        m_buttonPanel, SLOT(stateChanged(State)));
+}
+
+void Kcd::metaData()
+{   
+   
+   retrieveInformations();
 }
 
 K_EXPORT_PLASMA_APPLET(kcd, Kcd)

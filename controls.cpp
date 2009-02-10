@@ -67,24 +67,24 @@ void Controls::playPauseClicked()
     }
 }
 
-// void Controls::stateChanged(State state)
-// {
-//     if (m_state != state) {
-//         if (state == Playing) {
-//             m_playpause->setIcon("media-playback-pause");
-//             m_controller->associateWidget(m_playpause, "pause");
-//         } else {
-//             m_playpause->setIcon("media-playback-start");
-//             m_controller->associateWidget(m_playpause, "play");
-//         }
-//         /* Probably not needed
-//         if (state == NoPlayer) {
-//             setController(0);
-//         }
-//         */
-//         m_state = state;
-//     }
-// }
+void Controls::stateChanged(State state)
+{
+    if (m_state != state) {
+        if (state == Playing) {
+            m_playpause->setIcon("media-playback-pause");
+            //m_controller->associateWidget(m_playpause, "pause");
+        } else {
+            m_playpause->setIcon("media-playback-start");
+            //m_controller->associateWidget(m_playpause, "play");
+        }
+        /* Probably not needed
+        if (state == NoPlayer) {
+            setController(0);
+        }
+        */
+        m_state = state;
+    }
+}
 
 // void Controls::setController(Plasma::Service* controller)
 // {

@@ -62,7 +62,7 @@ enum State
     void setDisplayedButtons(Buttons buttons);
 
 public slots:
-    //void stateChanged(State state);
+    void stateChanged(State state);
     //void setController(Plasma::Service* controller);
 
 signals:
