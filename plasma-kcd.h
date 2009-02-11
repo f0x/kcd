@@ -42,6 +42,7 @@ class InfoPanel;
 class Controls;
 class Options;
 class MBManager;
+class TracksDialog;
 
 // here we define the applet
 class Kcd : public Plasma::PopupApplet
@@ -52,6 +53,8 @@ class Kcd : public Plasma::PopupApplet
        Kcd(QObject* parent, const QVariantList &args);
        ~Kcd();
        void init();
+
+       QGraphicsWidget *graphicsWidget();
 
     public slots:
        void play(); 
@@ -72,6 +75,8 @@ class Kcd : public Plasma::PopupApplet
        Phonon::AudioOutput* m_audioOutput;
        Phonon::MediaController* m_mediaController;
        MBManager* m_MBManager;
+       QGraphicsWidget *m_graphicsWidget;
+       TracksDialog *m_tracksDialog;
 
 
     private slots:
@@ -81,6 +86,7 @@ class Kcd : public Plasma::PopupApplet
        void currentTime(qint64);
        void updateSlider(qint64);
        void seekTo(int);
+       void viewTrackList();
 
     signals:
        //void stateChanged(State state);

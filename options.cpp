@@ -35,7 +35,7 @@ Options::Options(QGraphicsWidget *parent)
       m_loop(new Plasma::IconWidget(this))
 {
    m_tracklist->setIcon("format-list-unordered");
-   connect(m_tracklist, SIGNAL(clicked()), this, SLOT(playPauseClicked()));
+   connect(m_tracklist, SIGNAL(clicked()), this, SIGNAL(showTrackList()));
    m_tracklist->setMinimumSize(m_tracklist->sizeFromIconSize(10));
 
    Plasma::ToolTipContent data;

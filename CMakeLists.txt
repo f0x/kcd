@@ -22,6 +22,7 @@ set(kcd_SRCS plasma-kcd.cpp
              mbmanager.cpp
              options.cpp
              volumecontroller.cpp
+             tracksdialog.cpp
 )
 
 # Now make sure all files get to the right place

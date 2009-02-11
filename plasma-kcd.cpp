@@ -22,6 +22,7 @@
 #include "options.h"
 #include "mbmanager.h"
 #include "volumecontroller.h"
+#include "tracksdialog.h"
 
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
@@ -46,7 +47,8 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
       m_buttonPanel(new Controls(this)),
       m_optionsPanel(new Options(this)),
       m_positionSlider(new Plasma::Slider(this)),
-      m_graphicsWidget(0)
+      m_graphicsWidget(0),
+      m_tracksDialog(new TracksDialog)
 {
     //setBackgroundHints(DefaultBackground);
     resize(340, 225); // ideal planar size
@@ -69,6 +71,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
 
 Kcd::~Kcd()
 {
+   delete m_tracksDialog;
 }
 
 QGraphicsWidget* Kcd::graphicsWidget()
@@ -164,6 +167,12 @@ void Kcd::setupActions()
     connect(m_buttonPanel, SIGNAL(previous()), this, SLOT(prev()));
     connect(m_buttonPanel, SIGNAL(next()), this, SLOT(next()));
     connect(m_positionSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekTo(int)));
+    connect(m_optionsPanel, SIGNAL(showTrackList()), this, SLOT(viewTrackList()));
+}
+
+void Kcd::viewTrackList()
+{
+    m_tracksDialog->setVisible(!m_tracksDialog->isVisible());
 }
 
 void Kcd::updateSlider(qint64 seconds)

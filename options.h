@@ -47,6 +47,9 @@ class Options : public QGraphicsWidget
     private slots:
         void randomTrack();
         void loopList();
+
+    signals:
+        void showTrackList();
 };
 
 #endif
