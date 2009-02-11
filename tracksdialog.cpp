@@ -18,6 +18,7 @@
 #include "tracksdialog.h"
 
 #include <QGraphicsLinearLayout>
+#include <QStandardItemModel>
 
 TracksDialog::TracksDialog(QWidget *parent) : Plasma::Dialog(parent),
         isMoving(false),
@@ -31,6 +32,7 @@ TracksDialog::TracksDialog(QWidget *parent) : Plasma::Dialog(parent),
    m_base->setLayout(layout);
 
    setGraphicsWidget(m_base);
+
 }
 
 TracksDialog::~TracksDialog()
@@ -59,4 +61,16 @@ void TracksDialog::mouseReleaseEvent(QMouseEvent *event)
 { 
     isMoving = false;
     Plasma::Dialog::mouseReleaseEvent(event);
+}
+
+void TracksDialog::updateList()
+{
+   QStandardItemModel model(4, 4);
+   for (int row = 0; row < 4; ++row) {
+     for (int column = 0; column < 4; ++column) {
+         QStandardItem *item = new QStandardItem(QString("row %0, column %1").arg(row).arg(column));
+         model.setItem(row, column, item);
+     }
+   }
+   m_treeView->setModel(model);
 }

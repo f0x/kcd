@@ -32,6 +32,8 @@ class TracksDialog : public Plasma::Dialog
         TracksDialog(QWidget *parent = 0);
         ~TracksDialog();
 
+        void updateList();
+
     protected:
         void mouseMoveEvent(QMouseEvent *event);
         void mousePressEvent(QMouseEvent *event);
@@ -43,6 +45,7 @@ class TracksDialog : public Plasma::Dialog
         QGraphicsWidget *m_base;
 
         Plasma::TreeView* m_treeView;
+
 };
 
 #endif
