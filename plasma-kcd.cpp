@@ -21,6 +21,7 @@
 #include "cdhandler.h"
 #include "options.h"
 #include "mbmanager.h"
+#include "volumecontroller.h"
 
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
@@ -58,6 +59,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
     layout->addItem(m_positionSlider, 2, 0);
     m_optionsPanel->show();
     layout->addItem(m_optionsPanel, 0, 1);
+    layout->addItem(new VolumeController(Qt::Vertical, this), 0, 2);
     setLayout(layout);
 
     m_positionSlider->setOrientation(Qt::Horizontal);

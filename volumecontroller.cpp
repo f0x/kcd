@@ -21,6 +21,7 @@
 #include <QStyleOptionGraphicsItem>
 #include <QRect>
 #include <QGraphicsSceneResizeEvent>
+#include <QGraphicsItem>
 
 // Plasma
 #include <Plasma/IconWidget>
@@ -37,7 +38,7 @@
 
 VolumeController::VolumeController(Qt::Orientation orientation, QGraphicsItem *parent) : QGraphicsWidget(parent),
                                                                                          m_volume(1.0),
-                                                                                         m_icon(new Plasma::IconWidget(this)),
+                                                                                         m_icon(new Plasma::IconWidget(this))
 {
     m_icon->setIcon(HIGH_VOLUME);
 
@@ -66,14 +67,18 @@ void VolumeController::resizeEvent(QGraphicsSceneResizeEvent *event)
     Q_UNUSED(event)
 
     // updating geometries
-    m_segmentsRect = rect();
+    m_segmentsRect = rect().toRect();
     if (m_orientation == Qt::Horizontal) {
         m_segmentsRect.setWidth(rect().width() - ICON_SIZE);
         m_segmentsRect.translate(ICON_SIZE, 0);
+        m_icon->setPos(0, 0);
     } else {
         m_segmentsRect.setHeight(rect().height() - ICON_SIZE);
+        m_icon->setPos(0, rect().height() - ICON_SIZE);
         // m_segmentsRect.translate(0, 0);
     }
+
+    m_icon->resize(ICON_SIZE, ICON_SIZE);
 
     update();
 }
@@ -94,9 +99,36 @@ void VolumeController::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setPen(fillColor);
     painter->setBrush(fillColor);
 
-    QRect segment;
-    QRect activeSegmentsRect;
+    painter->setRenderHint(QPainter::Antialiasing);
+
+    QRect activeSegmentsRect = m_segmentsRect;
+    QRect segment = activeSegmentsRect;
 
     if (m_orientation == Qt::Horizontal) {
+        activeSegmentsRect.setWidth(m_segmentsRect.width() * m_volume);
+        segment.setWidth(SEGMENT_WIDTH);
+
+        const int count = activeSegmentsRect.width() / (SEGMENT_SPACE + SEGMENT_WIDTH);
+        const int segmentFullSize = segment.height();
+
+        for (int i = count; i >= 0; i--) {
+            segment.setHeight(segmentFullSize * ((float)i / count));
+            painter->drawRoundedRect(segment, 20.0, 20.0);
+            segment.translate(SEGMENT_SPACE + SEGMENT_WIDTH, 0);
+        }
+    } else { // the widget is vertical
+        activeSegmentsRect.setHeight(m_segmentsRect.height() * m_volume);
+        segment.setHeight(SEGMENT_WIDTH);
+
+        const int count = activeSegmentsRect.height() / (SEGMENT_SPACE + SEGMENT_WIDTH);
+        const int segmentFullSize = segment.width();
+
+        for (int i = count; i >= 0; i--) {
+            segment.setWidth(segmentFullSize * ((float)i / count));
+            painter->drawRoundedRect(segment, 20.0, 20.0);
+            segment.translate(0, SEGMENT_SPACE + SEGMENT_WIDTH);
+        }
     }
+
+    painter->restore();
 }

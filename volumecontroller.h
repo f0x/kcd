@@ -23,6 +23,7 @@ class QStyleOptionGraphicsItem;
 class QWidget;
 class QRect;
 class QGraphicsSceneResizeEvent;
+class QGraphicsItem;
 
 namespace Plasma {
     class IconWidget;
