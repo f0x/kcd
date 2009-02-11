@@ -40,6 +40,10 @@ class Options : public QGraphicsWidget
         Plasma::IconWidget* m_tracklist;
         Plasma::IconWidget* m_random;
         Plasma::IconWidget* m_loop;
+
+    private slots:
+        void randomTrack(bool);
+        void loopList(bool);
 };
 
 #endif

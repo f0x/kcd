@@ -35,7 +35,7 @@ Options::Options(QGraphicsWidget *parent)
       m_loop(new Plasma::IconWidget(this))
 {
    m_tracklist->setIcon("format-list-unordered");
-   connect(m_tracklist, SIGNAL(pressed(bool)), this, SLOT(playPauseClicked(bool)));
+   connect(m_tracklist, SIGNAL(clicked()), this, SLOT(playPauseClicked()));
    m_tracklist->setMinimumSize(m_tracklist->sizeFromIconSize(10));
 
    Plasma::ToolTipContent data;
@@ -45,7 +45,7 @@ Options::Options(QGraphicsWidget *parent)
    Plasma::ToolTipManager::self()->setContent(m_tracklist, data);
 
    m_random->setIcon("roll");
-   connect(m_random, SIGNAL(clicked()), this, SIGNAL(stop()));
+   connect(m_random, SIGNAL(pressed(bool)), this, SLOT(randomTrack(bool)));
    m_random->setMinimumSize(m_random->sizeFromIconSize(10));
    data.setMainText(i18n("Random - off"));
    data.setSubText(i18n("Play random track"));
@@ -53,7 +53,7 @@ Options::Options(QGraphicsWidget *parent)
    Plasma::ToolTipManager::self()->setContent(m_random, data);
 
    m_loop->setIcon("object-rotate-right");
-   connect(m_loop, SIGNAL(clicked()), this, SIGNAL(previous()));
+   connect(m_loop, SIGNAL(pressed(bool)), this, SLOT(loopList(bool)));
    m_loop->setMinimumSize(m_loop->sizeFromIconSize(10));
    data.setMainText(i18n("Repeat - off"));
    data.setSubText(i18n("Play again the tracklist"));
@@ -71,4 +71,39 @@ Options::Options(QGraphicsWidget *parent)
 
 Options::~Options()
 {
+}
+
+void Options::randomTrack(bool pressed)
+{
+   kDebug() << "RANDOM PRESSED";
+   Plasma::ToolTipContent data;
+   data.setSubText(i18n("Play random track"));
+   data.setImage(KIcon("roll").pixmap(IconSize(KIconLoader::Desktop)));
+   if (pressed) {
+       data.setMainText(i18n("Random - on"));
+       kDebug() << "RANDOM PRESSED - ON";
+   }
+   else {
+       m_random->setPressed(false);
+       data.setMainText(i18n("Random - off"));
+       kDebug() << "RANDOM PRESSED - OFF";
+   }
+
+   Plasma::ToolTipManager::self()->setContent(m_random, data);
+}
+
+void Options::loopList(bool pressed)
+{
+   Plasma::ToolTipContent data;
+   data.setSubText(i18n("Play again the tracklist"));
+   data.setImage(KIcon("object-rotate-right").pixmap(IconSize(KIconLoader::Desktop)));
+   
+   if (pressed) {
+       data.setMainText(i18n("Repeat - on"));
+   }
+   else {
+       data.setMainText(i18n("Repeat - off"));
+   }
+
+   Plasma::ToolTipManager::self()->setContent(m_loop, data);
 }
