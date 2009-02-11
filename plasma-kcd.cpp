@@ -47,8 +47,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
       m_buttonPanel(new Controls(this)),
       m_optionsPanel(new Options(this)),
       m_positionSlider(new Plasma::Slider(this)),
-      m_graphicsWidget(0),
-      m_tracksDialog(new TracksDialog)
+      m_graphicsWidget(0)
 {
     //setBackgroundHints(DefaultBackground);
     resize(340, 225); // ideal planar size
@@ -62,11 +61,6 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
 
     /** Music Brainz initialisation **/
     m_MBManager = new MBManager();
-
-    CdHandler *handler = new CdHandler(this);
-    connect (handler, SIGNAL(cdInserted(const Phonon::MediaSource&)),
-             this, SLOT(handleCd(const Phonon::MediaSource&)));
-    handler->checkForPreviousDevices();
 }
 
 Kcd::~Kcd()
@@ -113,13 +107,20 @@ void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
 
 void Kcd::init()
 {
+   m_tracksDialog = new TracksDialog(this);
    setupActions();
    setPopupIcon("media-optical-audio");
+
+    CdHandler *handler = new CdHandler(this);
+    connect (handler, SIGNAL(cdInserted(const Phonon::MediaSource&)),
+             this, SLOT(handleCd(const Phonon::MediaSource&)));
+    handler->checkForPreviousDevices();
 }
 
 void Kcd::retrieveInformations()
 {
     m_MBManager->discLookup();
+    m_tracksDialog->setTracks(m_MBManager->getTrackList());
 }
 
 void Kcd::play()

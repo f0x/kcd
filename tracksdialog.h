@@ -19,20 +19,23 @@
 #define TRACKSDIALOG_H
 
 #include <QMouseEvent>
+#include <QList>
 
 // Plasma
 #include <Plasma/Dialog>
 #include <Plasma/TreeView>
+class QStandardItemModel;
+class MBTrackInfo;
 
 class TracksDialog : public Plasma::Dialog
 {
     Q_OBJECT
 
     public:
-        TracksDialog(QWidget *parent = 0);
+        TracksDialog(QGraphicsWidget *widget, QWidget *parent = 0);
         ~TracksDialog();
 
-        void updateList();
+        void setTracks(const QList<MBTrackInfo> &tracks);
 
     protected:
         void mouseMoveEvent(QMouseEvent *event);
@@ -45,6 +48,9 @@ class TracksDialog : public Plasma::Dialog
         QGraphicsWidget *m_base;
 
         Plasma::TreeView* m_treeView;
+
+        QStandardItemModel *m_model;
+        QList<MBTrackInfo> m_tracks;
 
 };
 

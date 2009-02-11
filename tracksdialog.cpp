@@ -16,22 +16,35 @@
  */
 
 #include "tracksdialog.h"
+#include "mbmanager.h"
 
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
+#include <QTreeView>
 
-TracksDialog::TracksDialog(QWidget *parent) : Plasma::Dialog(parent),
+#include <KDebug>
+
+#include <Plasma/Delegate>
+#include <Plasma/Corona>
+
+TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::Dialog(parent),
         isMoving(false),
-        m_base(new QGraphicsWidget)
+        m_base(new QGraphicsWidget(widget)),
+        m_model(new QStandardItemModel(this))
 {
-   m_treeView = new Plasma::TreeView;
-   setResizeHandleCorners(Dialog::All);
+    m_treeView = new Plasma::TreeView;
 
-   QGraphicsLinearLayout* layout = new QGraphicsLinearLayout;
-   layout->addItem(m_treeView);
-   m_base->setLayout(layout);
+    setResizeHandleCorners(Dialog::All);
 
-   setGraphicsWidget(m_base);
+    QGraphicsLinearLayout* layout = new QGraphicsLinearLayout;
+    layout->addItem(m_treeView);
+    m_base->setLayout(layout);
+
+    static_cast<Plasma::Corona*>(widget->scene())->addOffscreenWidget(m_base);
+    setGraphicsWidget(m_base);
+
+    m_treeView->setModel(m_model);
+    m_treeView->nativeWidget()->setItemDelegate(new Plasma::Delegate(this));
 
 }
 
@@ -63,14 +76,11 @@ void TracksDialog::mouseReleaseEvent(QMouseEvent *event)
     Plasma::Dialog::mouseReleaseEvent(event);
 }
 
-void TracksDialog::updateList()
+void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks)
 {
-   QStandardItemModel model(4, 4);
-   for (int row = 0; row < 4; ++row) {
-     for (int column = 0; column < 4; ++column) {
-         QStandardItem *item = new QStandardItem(QString("row %0, column %1").arg(row).arg(column));
-         model.setItem(row, column, item);
-     }
-   }
-   m_treeView->setModel(model);
+    m_tracks = tracks;
+
+    foreach (const MBTrackInfo &track, m_tracks) {
+        m_model->appendRow(new QStandardItem(track.Title));
+    }
 }
