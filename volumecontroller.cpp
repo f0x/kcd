@@ -32,9 +32,9 @@
 #define MEDIUM_VOLUME "audio-volume-medium"
 #define MUTED_VOLUME "audio-volume-muted"
 
-#define ICON_SIZE 32
+#define ICON_SIZE 24
 #define SEGMENT_WIDTH 3
-#define SEGMENT_SPACE 7 // space between segments
+#define SEGMENT_SPACE 5 // space between segments
 
 VolumeController::VolumeController(Qt::Orientation orientation, QGraphicsItem *parent) : QGraphicsWidget(parent),
                                                                                          m_volume(1.0),

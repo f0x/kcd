@@ -42,32 +42,15 @@
 
 Kcd::Kcd(QObject *parent, const QVariantList &args)
     : Plasma::PopupApplet(parent, args),
-      m_textPanel(new InfoPanel),
-      m_buttonPanel(new Controls),
-      m_optionsPanel(new Options),
-      m_positionSlider(new Plasma::Slider(this))
+      m_textPanel(new InfoPanel(this)),
+      m_buttonPanel(new Controls(this)),
+      m_optionsPanel(new Options(this)),
+      m_positionSlider(new Plasma::Slider(this)),
+      m_graphicsWidget(0)
 {
     //setBackgroundHints(DefaultBackground);
     resize(340, 225); // ideal planar size
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
-    m_textPanel->show();
-    QGraphicsGridLayout* layout = new QGraphicsGridLayout();
-    layout->addItem(m_textPanel, 0, 0);
-    m_buttonPanel->show();
-    m_buttonPanel->setDisplayedButtons(Controls::AllButtons);
-    layout->addItem(m_buttonPanel, 1, 0);
-    layout->addItem(m_positionSlider, 2, 0);
-    m_optionsPanel->show();
-    layout->addItem(m_optionsPanel, 0, 1);
-    layout->addItem(new VolumeController(Qt::Vertical, this), 0, 2);
-    setLayout(layout);
-
-    m_positionSlider->setOrientation(Qt::Horizontal);
-    m_positionSlider->setMinimum(0);
-    m_positionSlider->setMaximum(0);
-    m_positionSlider->setValue(0);
-
-    //m_positionSlider->setEnabled(false);
 
     m_mediaObject = new Phonon::MediaObject(this);
     m_audioOutput = new Phonon::AudioOutput(Phonon::NoCategory, this);
@@ -88,6 +71,36 @@ Kcd::~Kcd()
 {
 }
 
+QGraphicsWidget* Kcd::graphicsWidget()
+{
+    if (!m_graphicsWidget) {
+        m_graphicsWidget = new QGraphicsWidget(this);
+        m_textPanel->show();
+        QGraphicsGridLayout* layout = new QGraphicsGridLayout();
+        layout->addItem(m_textPanel, 0, 0);
+        m_buttonPanel->show();
+        m_buttonPanel->setDisplayedButtons(Controls::AllButtons);
+        layout->addItem(m_buttonPanel, 1, 0);
+        layout->addItem(m_positionSlider, 2, 0);
+        m_optionsPanel->show();
+        layout->addItem(m_optionsPanel, 0, 1);
+
+        layout->addItem(new VolumeController(Qt::Vertical, this), 0, 2);
+
+        m_graphicsWidget->setLayout(layout);
+  
+        m_positionSlider->setOrientation(Qt::Horizontal);
+        m_positionSlider->setMinimum(0);
+        m_positionSlider->setMaximum(0);
+        m_positionSlider->setValue(0);
+ 
+        m_graphicsWidget->setMinimumSize(300, 200);
+        //m_positionSlider->setEnabled(false);
+    }
+
+    return m_graphicsWidget;
+}
+
 void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
 {
    m_mediaObject->setCurrentSource(mediaSource);
@@ -98,6 +111,7 @@ void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
 void Kcd::init()
 {
    setupActions();
+   setPopupIcon("media-optical-audio");
 }
 
 void Kcd::retrieveInformations()
