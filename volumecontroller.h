@@ -50,6 +50,9 @@ protected slots:
 
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent*);
+    void mousePressEvent(QGraphicsSceneMouseEvent *);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *);
 };
 
 #endif

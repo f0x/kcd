@@ -101,29 +101,27 @@ void VolumeController::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
     painter->setRenderHint(QPainter::Antialiasing);
 
-    QRect activeSegmentsRect = m_segmentsRect;
-    QRect segment = activeSegmentsRect;
+    QRect segment = m_segmentsRect;
 
     if (m_orientation == Qt::Horizontal) {
-        activeSegmentsRect.setWidth(m_segmentsRect.width() * m_volume);
         segment.setWidth(SEGMENT_WIDTH);
 
-        const int count = activeSegmentsRect.width() / (SEGMENT_SPACE + SEGMENT_WIDTH);
+        const int count = m_segmentsRect.width() / (SEGMENT_SPACE + SEGMENT_WIDTH);
         const int segmentFullSize = segment.height();
 
-        for (int i = count; i >= 0; i--) {
+        for (int i = 0; i < count*m_volume; i--) {
             segment.setHeight(segmentFullSize * ((float)i / count));
             painter->drawRoundedRect(segment, 20.0, 20.0);
             segment.translate(SEGMENT_SPACE + SEGMENT_WIDTH, 0);
         }
     } else { // the widget is vertical
-        activeSegmentsRect.setHeight(m_segmentsRect.height() * m_volume);
         segment.setHeight(SEGMENT_WIDTH);
+        segment.translate(0, m_segmentsRect.height() * m_volume);
 
-        const int count = activeSegmentsRect.height() / (SEGMENT_SPACE + SEGMENT_WIDTH);
+        const int count = m_segmentsRect.height() / (SEGMENT_SPACE + SEGMENT_WIDTH);
         const int segmentFullSize = segment.width();
 
-        for (int i = count; i >= 0; i--) {
+        for (int i = count*m_volume; i >= 0; i--) {
             segment.setWidth(segmentFullSize * ((float)i / count));
             painter->drawRoundedRect(segment, 20.0, 20.0);
             segment.translate(0, SEGMENT_SPACE + SEGMENT_WIDTH);
@@ -132,3 +130,24 @@ void VolumeController::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
     painter->restore();
 }
+
+void VolumeController::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (!m_segmentsRect.contains(event->pos().toPoint())) {
+        QGraphicsWidget::mousePressEvent(event);
+    }
+
+    if (m_orientation == Qt::Horizontal) {
+        m_volume = (float) m_segmentsRect.width() / (event->pos().toPoint().x() + ICON_SIZE);
+    } else { // vertical
+        m_volume = (float) m_segmentsRect.height() / (event->pos().toPoint().y() - ICON_SIZE);
+    }
+
+    update(m_segmentsRect);
+}
+
+void VolumeController::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
+{}
+
+void VolumeController::mouseMoveEvent(QGraphicsSceneMouseEvent *)
+{}
