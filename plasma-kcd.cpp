@@ -199,7 +199,11 @@ void Kcd::setupActions()
 
 void Kcd::randomEnabled(bool random)
 {
-   //connect(m_mediaObject, SIGNAL(finished()), this
+   if (random) {
+      kDebug() << QString::number(1 + qrand() % 10);
+      //m_mediaController->();
+   }  else {
+   }
 }
 
 void Kcd::repeatEnabled(bool repeat)
