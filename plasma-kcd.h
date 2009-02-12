@@ -90,6 +90,9 @@ class Kcd : public Plasma::PopupApplet
        void seekTo(int);
        void viewTrackList();
        void playSelected(int);
+       void randomEnabled(bool);
+       void repeatEnabled(bool);
+       void repeatSource();
 
     signals:
        //void stateChanged(State state);

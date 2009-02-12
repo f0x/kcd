@@ -50,6 +50,8 @@ class Options : public QGraphicsWidget
 
     signals:
         void showTrackList();
+        void activeRandom(bool);
+        void activeRepeat(bool);
 };
 
 #endif

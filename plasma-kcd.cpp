@@ -183,16 +183,39 @@ void Kcd::next()
 
 void Kcd::setupActions()
 {
-    connect(m_mediaObject, SIGNAL(metaDataChanged()), this, SLOT(metaData()));
-    connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(updateSlider(qint64)));
-    connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(currentTime(qint64)));
-    connect(m_buttonPanel, SIGNAL(play()), this, SLOT(play()));
-    connect(m_buttonPanel, SIGNAL(pause()), this, SLOT(pause()));
-    connect(m_buttonPanel, SIGNAL(stop()), this, SLOT(stop()));
-    connect(m_buttonPanel, SIGNAL(previous()), this, SLOT(prev()));
-    connect(m_buttonPanel, SIGNAL(next()), this, SLOT(next()));
-    connect(m_positionSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekTo(int)));
-    connect(m_optionsPanel, SIGNAL(showTrackList()), this, SLOT(viewTrackList()));
+   connect(m_mediaObject, SIGNAL(metaDataChanged()), this, SLOT(metaData()));
+   connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(updateSlider(qint64)));
+   connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(currentTime(qint64)));
+   connect(m_buttonPanel, SIGNAL(play()), this, SLOT(play()));
+   connect(m_buttonPanel, SIGNAL(pause()), this, SLOT(pause()));
+   connect(m_buttonPanel, SIGNAL(stop()), this, SLOT(stop()));
+   connect(m_buttonPanel, SIGNAL(previous()), this, SLOT(prev()));
+   connect(m_buttonPanel, SIGNAL(next()), this, SLOT(next()));
+   connect(m_positionSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekTo(int)));
+   connect(m_optionsPanel, SIGNAL(showTrackList()), this, SLOT(viewTrackList()));
+   connect(m_optionsPanel, SIGNAL(activeRandom(bool)), this, SLOT(randomEnabled(bool)));
+   connect(m_optionsPanel, SIGNAL(activeRepeat(bool)), this, SLOT(repeatEnabled(bool)));
+}
+
+void Kcd::randomEnabled(bool random)
+{
+   //connect(m_mediaObject, SIGNAL(finished()), this
+}
+
+void Kcd::repeatEnabled(bool repeat)
+{
+   if (repeat) {
+       connect(m_mediaObject, SIGNAL(aboutToFinish()), this, SLOT(repeatSource()));
+   } else {
+       disconnect(m_mediaObject, SIGNAL(aboutToFinish()), this, SLOT(repeatSource()));
+   }
+}
+
+void Kcd::repeatSource()
+{
+   kDebug() << "segnale finished";
+   m_mediaObject->setCurrentSource(m_mediaObject->currentSource());
+   play();
 }
 
 void Kcd::viewTrackList()
@@ -241,7 +264,9 @@ void Kcd::metaData()
 
     m_textPanel->updateMetadata(metaData);
 
-    m_positionSlider->setMaximum(m_mediaObject->totalTime() / 1000);
+    m_positionSlider->setMaximum(trackInfo.Duration.toInt() / 1000);
+    //kDebug() << trackInfo.Duration;
+    //m_positionSlider->setMaximum(m_mediaObject->totalTime() / 1000);
     currentTime(0);
 }
 

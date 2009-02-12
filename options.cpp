@@ -85,11 +85,13 @@ void Options::randomTrack()
        data.setMainText(i18n("Random - off"));
        randomFlag = false;
        // emetti segnale
+       emit activeRandom(false);
    }
    else {
        data.setMainText(i18n("Random - on"));
        randomFlag = true;
        // emetti segnale
+       emit activeRandom(true);
    }
 
    Plasma::ToolTipManager::self()->setContent(m_random, data);
@@ -104,12 +106,14 @@ void Options::loopList()
    if (loopFlag) {
        data.setMainText(i18n("Repeat - off"));
        loopFlag = false;
+       emit activeRepeat(false);
        // emetti segnale
    }
    else {
        data.setMainText(i18n("Repeat - on"));
        loopFlag = true;
        // emetti segnale
+       emit activeRepeat(true);
    }
 
    Plasma::ToolTipManager::self()->setContent(m_loop, data);
