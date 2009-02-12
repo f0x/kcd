@@ -123,6 +123,7 @@ void Kcd::init()
 
     Plasma::ExtenderItem *trackList = new Plasma::ExtenderItem(extender());
     trackList->setName("tracklist");
+    trackList->setTitle(i18n("CD Tracks List"));
     initExtenderItem(trackList);
 
     setupActions();
