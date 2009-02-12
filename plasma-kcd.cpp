@@ -199,12 +199,13 @@ void Kcd::setupActions()
 
 void Kcd::randomEnabled(bool random)
 {
-//    if (random) {
-//       kDebug() << "Random Enabled";
-//       connect(m_mediaController, SIGNAL(titleChanged(int)), this, SLOT(randomSource(int)));
-//    }  else {
-//       disconnect(m_mediaObject, SIGNAL(aboutToFinish()), this, SLOT(randomSource()));
-//    }
+   if (random) {
+      kDebug() << "Random Enabled";
+      m_mediaObject->clearQueue();
+      connect(m_mediaObject, SIGNAL(aboutToFinit()), this, SLOT(randomSource()));
+   }  else {
+      disconnect(m_mediaObject, SIGNAL(aboutToFinish()), this, SLOT(randomSource()));
+   }
 }
 
 void Kcd::repeatEnabled(bool repeat)
@@ -216,7 +217,7 @@ void Kcd::repeatEnabled(bool repeat)
    }
 }
 
-void Kcd::randomSource(int newTitle)
+void Kcd::randomSource()
 {
    kDebug() << "Random Source";
    int number = 1 + qrand() % 10;
