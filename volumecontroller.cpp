@@ -103,25 +103,28 @@ void VolumeController::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
     QRect segment = m_segmentsRect;
 
+    // TODO: it has been tested only with vertical mode.. test it
+    // also with horizontal!!
     if (m_orientation == Qt::Horizontal) {
         segment.setWidth(SEGMENT_WIDTH);
 
         const int count = m_segmentsRect.width() / (SEGMENT_SPACE + SEGMENT_WIDTH);
         const int segmentFullSize = segment.height();
 
-        for (int i = 0; i < count*m_volume; i--) {
+        for (int i = 0; i < count*m_volume; i++) {
             segment.setHeight(segmentFullSize * ((float)i / count));
             painter->drawRoundedRect(segment, 20.0, 20.0);
             segment.translate(SEGMENT_SPACE + SEGMENT_WIDTH, 0);
         }
     } else { // the widget is vertical
         segment.setHeight(SEGMENT_WIDTH);
-        segment.translate(0, m_segmentsRect.height() * m_volume);
+        segment.translate(0, m_segmentsRect.height() * (1.0 - m_volume));
 
         const int count = m_segmentsRect.height() / (SEGMENT_SPACE + SEGMENT_WIDTH);
         const int segmentFullSize = segment.width();
 
-        for (int i = count*m_volume; i >= 0; i--) {
+        const int max = count * m_volume;
+        for (int i = max; i >= 0; i--) {
             segment.setWidth(segmentFullSize * ((float)i / count));
             painter->drawRoundedRect(segment, 20.0, 20.0);
             segment.translate(0, SEGMENT_SPACE + SEGMENT_WIDTH);
@@ -135,12 +138,13 @@ void VolumeController::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!m_segmentsRect.contains(event->pos().toPoint())) {
         QGraphicsWidget::mousePressEvent(event);
+        return;
     }
 
     if (m_orientation == Qt::Horizontal) {
-        m_volume = (float) m_segmentsRect.width() / (event->pos().toPoint().x() + ICON_SIZE);
+        m_volume = (qreal) m_segmentsRect.width() / (event->pos().toPoint().x() + ICON_SIZE);
     } else { // vertical
-        m_volume = (float) m_segmentsRect.height() / (event->pos().toPoint().y() - ICON_SIZE);
+        m_volume = (qreal) (m_segmentsRect.height() - event->pos().toPoint().y()) / m_segmentsRect.height();
     }
 
     update(m_segmentsRect);
@@ -149,5 +153,18 @@ void VolumeController::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void VolumeController::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {}
 
-void VolumeController::mouseMoveEvent(QGraphicsSceneMouseEvent *)
-{}
+void VolumeController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (m_segmentsRect.height() < event->pos().y() || event->pos().y() < 0.0) {
+        QGraphicsWidget::mousePressEvent(event); 
+        return;
+    }
+
+    if (m_orientation == Qt::Horizontal) {
+        m_volume = (qreal) m_segmentsRect.width() / (event->pos().toPoint().x() + ICON_SIZE);
+    } else { // vertical
+        m_volume = (qreal) (m_segmentsRect.height() - event->pos().toPoint().y()) / m_segmentsRect.height();
+    }
+
+    update(m_segmentsRect);
+}
