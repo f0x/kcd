@@ -21,6 +21,9 @@
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
 #include <QTreeView>
+#include <QTime>
+#include <QHeaderView>
+#include <QModelIndex>
 
 #include <KDebug>
 
@@ -34,6 +37,15 @@ TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::D
 {
     m_treeView = new Plasma::TreeView;
 
+    m_view = m_treeView->nativeWidget();
+    m_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    QHeaderView *header = m_view->header();
+    header->setResizeMode(QHeaderView::ResizeToContents);
+    m_view->setAlternatingRowColors(true); 
+    m_treeView->setModel(m_model);
+    
+    connect(m_view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(playSelected(const QModelIndex &)));
+
     setResizeHandleCorners(Dialog::All);
 
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout;
@@ -43,13 +55,19 @@ TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::D
     static_cast<Plasma::Corona*>(widget->scene())->addOffscreenWidget(m_base);
     setGraphicsWidget(m_base);
 
-    m_treeView->setModel(m_model);
-    m_treeView->nativeWidget()->setItemDelegate(new Plasma::Delegate(this));
+    //m_treeView->nativeWidget()->setItemDelegate(new Plasma::Delegate(this));
 
+    resize(400,300);
 }
 
 TracksDialog::~TracksDialog()
 {
+}
+
+void TracksDialog::playSelected(const QModelIndex &modelIndex)
+{
+    int row = modelIndex.row();
+    emit changePlayed(row);
 }
 
 void TracksDialog::mousePressEvent(QMouseEvent *event)
@@ -78,9 +96,24 @@ void TracksDialog::mouseReleaseEvent(QMouseEvent *event)
 
 void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks)
 {
+
     m_tracks = tracks;
+    int number = 1;
+   
+    QStringList headers;
+    headers << i18n("Track") << i18n("Title") << i18n("Duration");
+    m_model->setHorizontalHeaderLabels(headers);
 
     foreach (const MBTrackInfo &track, m_tracks) {
-        m_model->appendRow(new QStandardItem(track.Title));
+        QTime time;
+        time = time.addMSecs((track.Duration).toInt());
+        QList<QStandardItem *> items; 
+        items << new QStandardItem(QString::number(number));
+        items << new QStandardItem(track.Title);
+        items << new QStandardItem(time.toString("mm:ss"));
+        m_model->appendRow(items);
+        number++;
     }
+
+
 }

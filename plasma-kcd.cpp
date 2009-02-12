@@ -108,6 +108,7 @@ void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
 void Kcd::init()
 {
    m_tracksDialog = new TracksDialog(this);
+   connect(m_tracksDialog, SIGNAL(changePlayed(int)), this, SLOT(playSelected(int)));
    setupActions();
    setPopupIcon("media-optical-audio");
 
@@ -115,6 +116,12 @@ void Kcd::init()
     connect (handler, SIGNAL(cdInserted(const Phonon::MediaSource&)),
              this, SLOT(handleCd(const Phonon::MediaSource&)));
     handler->checkForPreviousDevices();
+}
+
+void Kcd::playSelected(int selection)
+{
+   m_mediaController->setCurrentTitle(selection + 1);
+   play();
 }
 
 void Kcd::retrieveInformations()
@@ -212,7 +219,7 @@ void Kcd::metaData()
 
     metaData["Artist"] = trackInfo.Artist;
     metaData["Title"] = QString::number(m_mediaController->currentTitle()) + " - " + trackInfo.Title;
-//     metaData["Time"] = trackInfo.Duration;
+    metaData["Time"] = trackInfo.Duration;
     metaData["Album"] = m_MBManager->getDiscInfo().Title;
 
     m_textPanel->updateMetadata(metaData);

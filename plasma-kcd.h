@@ -87,6 +87,7 @@ class Kcd : public Plasma::PopupApplet
        void updateSlider(qint64);
        void seekTo(int);
        void viewTrackList();
+       void playSelected(int);
 
     signals:
        //void stateChanged(State state);

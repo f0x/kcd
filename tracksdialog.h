@@ -24,7 +24,9 @@
 // Plasma
 #include <Plasma/Dialog>
 #include <Plasma/TreeView>
+
 class QStandardItemModel;
+class QModelIndex;
 class MBTrackInfo;
 
 class TracksDialog : public Plasma::Dialog
@@ -48,9 +50,16 @@ class TracksDialog : public Plasma::Dialog
         QGraphicsWidget *m_base;
 
         Plasma::TreeView* m_treeView;
+        QTreeView*  m_view;
 
         QStandardItemModel *m_model;
         QList<MBTrackInfo> m_tracks;
+
+    private slots:
+        void playSelected(const QModelIndex &);
+
+    signals:
+        void changePlayed(int);
 
 };
 
