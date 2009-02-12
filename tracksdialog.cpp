@@ -16,7 +16,6 @@
  */
 
 #include "tracksdialog.h"
-#include "mbmanager.h"
 
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
@@ -47,20 +46,21 @@ TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::D
     header->setResizeMode(QHeaderView::ResizeToContents);
     m_view->setAlternatingRowColors(true); 
     m_treeView->setModel(m_model);
-    
-    connect(m_view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(playSelected(const QModelIndex &)));
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->setSpacing(10);
+    //layout->setSpacing(10);
     
-    m_label = new Plasma::Label;
-
-    layout->addItem(m_treeView);
-
+    m_labelArtist = new Plasma::Label;
+    m_labelAlbum = new Plasma::Label;
+   
     Plasma::PushButton *buttonClose = new Plasma::PushButton;
     buttonClose->setText(i18n("Close"));
     KPushButton *nativeButtonClose = buttonClose->nativeWidget();
     nativeButtonClose->setIcon(KIcon("dialog-close"));
+
+    layout->addItem(m_labelArtist);
+    layout->addItem(m_labelAlbum);
+    layout->addItem(m_treeView);
     layout->addItem(buttonClose);
 
     m_base->setLayout(layout);
@@ -68,10 +68,13 @@ TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::D
     static_cast<Plasma::Corona*>(widget->scene())->addOffscreenWidget(m_base);
     setGraphicsWidget(m_base);
 
-    resize(350,260);
+    resize(350,300);
     setWindowTitle(i18n("Tracklist"));
     setWindowIcon(KIcon("format-list-unordered"));
     setResizeHandleCorners(Dialog::All);
+
+    connect(m_view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(playSelected(const QModelIndex &)));
+    connect(buttonClose, SIGNAL(clicked()), this, SLOT(hide()));
 }
 
 TracksDialog::~TracksDialog()
@@ -130,6 +133,7 @@ void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &i
        number++;
    }
 
-   m_label->setText(i18n("Artist") + " ");
+   m_labelArtist->setText("<b>" + i18n("Artist") + ": </b>" + m_info.Artist);
+   m_labelAlbum->setText("<b>" + i18n("Album") + ": </b>  " + m_info.Title);
 
 }

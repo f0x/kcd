@@ -18,6 +18,8 @@
 #ifndef TRACKSDIALOG_H
 #define TRACKSDIALOG_H
 
+#include "mbmanager.h"
+
 #include <QMouseEvent>
 #include <QList>
 
@@ -28,8 +30,6 @@
 
 class QStandardItemModel;
 class QModelIndex;
-class MBTrackInfo;
-class DiscInfo;
 
 class TracksDialog : public Plasma::Dialog
 {
@@ -58,7 +58,8 @@ class TracksDialog : public Plasma::Dialog
         QList<MBTrackInfo> m_tracks;
         DiscInfo m_info;
 
-        Plasma::Label *m_label;
+        Plasma::Label *m_labelArtist;
+        Plasma::Label *m_labelAlbum;
 
     private slots:
         void playSelected(const QModelIndex &);
