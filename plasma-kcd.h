@@ -36,6 +36,7 @@ namespace Phonon {
 
 namespace Plasma {
     class Slider;
+    class ExtenderItem;
 }
 
 class InfoPanel;
@@ -55,6 +56,7 @@ class Kcd : public Plasma::PopupApplet
        void init();
 
        QGraphicsWidget *graphicsWidget();
+       void initExtenderItem(Plasma::ExtenderItem *item);
 
     public slots:
        void play(); 

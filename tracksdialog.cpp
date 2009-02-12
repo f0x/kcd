@@ -32,12 +32,12 @@
 #include <Plasma/Corona>
 #include <Plasma/PushButton>
 
-TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::Dialog(parent),
+TracksDialog::TracksDialog(QGraphicsWidget *parent) : QGraphicsWidget(parent),
         isMoving(false),
-        m_base(new QGraphicsWidget(widget)),
+//         m_base(new QGraphicsWidget(parent)),
         m_model(new QStandardItemModel(this))
 {
-    m_treeView = new Plasma::TreeView;
+    m_treeView = new Plasma::TreeView(this);
 
     m_view = m_treeView->nativeWidget();
     m_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -53,7 +53,7 @@ TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::D
     m_labelArtist = new Plasma::Label;
     m_labelAlbum = new Plasma::Label;
    
-    Plasma::PushButton *buttonClose = new Plasma::PushButton;
+    Plasma::PushButton *buttonClose = new Plasma::PushButton(this);
     buttonClose->setText(i18n("Close"));
     KPushButton *nativeButtonClose = buttonClose->nativeWidget();
     nativeButtonClose->setIcon(KIcon("dialog-close"));
@@ -63,18 +63,17 @@ TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::D
     layout->addItem(m_treeView);
     layout->addItem(buttonClose);
 
-    m_base->setLayout(layout);
+    setLayout(layout);
 
-    static_cast<Plasma::Corona*>(widget->scene())->addOffscreenWidget(m_base);
-    setGraphicsWidget(m_base);
+//     static_cast<Plasma::Corona*>(widget->scene())->addOffscreenWidget(m_base);
 
-    resize(350,300);
-    setWindowTitle(i18n("Tracklist"));
-    setWindowIcon(KIcon("format-list-unordered"));
-    setResizeHandleCorners(Dialog::All);
+//     resize(350,300);
+//     setWindowTitle(i18n("Tracklist"));
+//     setWindowIcon(KIcon("format-list-unordered"));
+//     setResizeHandleCorners(Dialog::All);
 
     connect(m_view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(playSelected(const QModelIndex &)));
-    connect(buttonClose, SIGNAL(clicked()), this, SLOT(hide()));
+//     connect(buttonClose, SIGNAL(clicked()), this, SLOT(hide()));
 }
 
 TracksDialog::~TracksDialog()
@@ -87,29 +86,29 @@ void TracksDialog::playSelected(const QModelIndex &modelIndex)
     emit changePlayed(row);
 }
 
-void TracksDialog::mousePressEvent(QMouseEvent *event)
-{
-    if (!inControlArea(event->pos())) {
-        isMoving = true;
-        startPos = event->pos();
-    }
-    Plasma::Dialog::mousePressEvent(event);
-}
-
-void TracksDialog::mouseMoveEvent(QMouseEvent *event)
-{ 
-    if (isMoving) {
-        QPoint offset( event->pos().x()-startPos.x(), event->pos().y()-startPos.y());
-        move(pos()+=offset);
-    }
-    Plasma::Dialog::mouseMoveEvent(event);
-}
-
-void TracksDialog::mouseReleaseEvent(QMouseEvent *event)
-{ 
-    isMoving = false;
-    Plasma::Dialog::mouseReleaseEvent(event);
-}
+// void TracksDialog::mousePressEvent(QMouseEvent *event)
+// {
+//     if (!inControlArea(event->pos())) {
+//         isMoving = true;
+//         startPos = event->pos();
+//     }
+//     Plasma::Dialog::mousePressEvent(event);
+// }
+// 
+// void TracksDialog::mouseMoveEvent(QMouseEvent *event)
+// { 
+//     if (isMoving) {
+//         QPoint offset( event->pos().x()-startPos.x(), event->pos().y()-startPos.y());
+//         move(pos()+=offset);
+//     }
+//     Plasma::Dialog::mouseMoveEvent(event);
+// }
+// 
+// void TracksDialog::mouseReleaseEvent(QMouseEvent *event)
+// { 
+//     isMoving = false;
+//     Plasma::Dialog::mouseReleaseEvent(event);
+// }
 
 void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &info)
 {

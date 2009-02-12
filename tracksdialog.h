@@ -22,6 +22,7 @@
 
 #include <QMouseEvent>
 #include <QList>
+#include <QGraphicsWidget>
 
 // Plasma
 #include <Plasma/Dialog>
@@ -31,25 +32,25 @@
 class QStandardItemModel;
 class QModelIndex;
 
-class TracksDialog : public Plasma::Dialog
+class TracksDialog : public QGraphicsWidget
 {
     Q_OBJECT
 
     public:
-        TracksDialog(QGraphicsWidget *widget, QWidget *parent = 0);
+        TracksDialog(QGraphicsWidget *parent = 0);
         ~TracksDialog();
 
         void setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &info);
 
-    protected:
-        void mouseMoveEvent(QMouseEvent *event);
-        void mousePressEvent(QMouseEvent *event);
-        void mouseReleaseEvent(QMouseEvent *event);
+//     protected:
+//         void mouseMoveEvent(QMouseEvent *event);
+//         void mousePressEvent(QMouseEvent *event);
+//         void mouseReleaseEvent(QMouseEvent *event);
 
     private:
         bool isMoving;
         QPoint startPos;
-        QGraphicsWidget *m_base;
+//         QGraphicsWidget *m_base;
 
         Plasma::TreeView* m_treeView;
         QTreeView*  m_view;

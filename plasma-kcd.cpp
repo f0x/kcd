@@ -37,6 +37,8 @@
 #include <Plasma/Theme>
 #include <Plasma/Slider>
 #include <Plasma/Label>
+#include <Plasma/ExtenderItem>
+#include <Plasma/Extender>
 
 #include <KDebug>
 
@@ -65,7 +67,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
 
 Kcd::~Kcd()
 {
-   delete m_tracksDialog;
+//    delete m_tracksDialog;
 }
 
 QGraphicsWidget* Kcd::graphicsWidget()
@@ -84,6 +86,7 @@ QGraphicsWidget* Kcd::graphicsWidget()
 
         layout->addItem(new VolumeController(Qt::Vertical, this), 0, 2);
 
+        layout->addItem(extender(), 3, 0);
         m_graphicsWidget->setLayout(layout);
   
         m_positionSlider->setOrientation(Qt::Horizontal);
@@ -98,6 +101,14 @@ QGraphicsWidget* Kcd::graphicsWidget()
     return m_graphicsWidget;
 }
 
+void Kcd::initExtenderItem(Plasma::ExtenderItem *item)
+{
+    m_tracksDialog = new TracksDialog(item);
+    connect(m_tracksDialog, SIGNAL(changePlayed(int)), this, SLOT(playSelected(int)));
+
+    item->setWidget(m_tracksDialog);
+}
+
 void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
 {
    m_mediaObject->setCurrentSource(mediaSource);
@@ -107,10 +118,16 @@ void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
 
 void Kcd::init()
 {
-   m_tracksDialog = new TracksDialog(this);
-   connect(m_tracksDialog, SIGNAL(changePlayed(int)), this, SLOT(playSelected(int)));
-   setupActions();
-   setPopupIcon("media-optical-audio");
+    // let's initialize the widget if it is not yet..
+//     graphicsWidget();
+//     static_cast<QGraphicsGridLayout*>(layout())->addItem(extender(), 3, 0);
+
+    Plasma::ExtenderItem *trackList = new Plasma::ExtenderItem(extender());
+    trackList->setName("tracklist");
+    initExtenderItem(trackList);
+
+    setupActions();
+    setPopupIcon("media-optical-audio");
 
     CdHandler *handler = new CdHandler(this);
     connect (handler, SIGNAL(cdInserted(const Phonon::MediaSource&)),
