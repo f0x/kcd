@@ -24,10 +24,12 @@
 // Plasma
 #include <Plasma/Dialog>
 #include <Plasma/TreeView>
+#include <Plasma/Label>
 
 class QStandardItemModel;
 class QModelIndex;
 class MBTrackInfo;
+class DiscInfo;
 
 class TracksDialog : public Plasma::Dialog
 {
@@ -37,7 +39,7 @@ class TracksDialog : public Plasma::Dialog
         TracksDialog(QGraphicsWidget *widget, QWidget *parent = 0);
         ~TracksDialog();
 
-        void setTracks(const QList<MBTrackInfo> &tracks);
+        void setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &info);
 
     protected:
         void mouseMoveEvent(QMouseEvent *event);
@@ -54,6 +56,9 @@ class TracksDialog : public Plasma::Dialog
 
         QStandardItemModel *m_model;
         QList<MBTrackInfo> m_tracks;
+        DiscInfo m_info;
+
+        Plasma::Label *m_label;
 
     private slots:
         void playSelected(const QModelIndex &);

@@ -25,10 +25,13 @@
 #include <QHeaderView>
 #include <QModelIndex>
 
-#include <KDebug>
+#include <KDebug> 
+#include <KIcon>
+#include <KPushButton>
 
 #include <Plasma/Delegate>
 #include <Plasma/Corona>
+#include <Plasma/PushButton>
 
 TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::Dialog(parent),
         isMoving(false),
@@ -40,24 +43,35 @@ TracksDialog::TracksDialog(QGraphicsWidget *widget, QWidget *parent) : Plasma::D
     m_view = m_treeView->nativeWidget();
     m_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
     QHeaderView *header = m_view->header();
+    header->setMovable(false);
     header->setResizeMode(QHeaderView::ResizeToContents);
     m_view->setAlternatingRowColors(true); 
     m_treeView->setModel(m_model);
     
     connect(m_view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(playSelected(const QModelIndex &)));
 
-    setResizeHandleCorners(Dialog::All);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setSpacing(10);
+    
+    m_label = new Plasma::Label;
 
-    QGraphicsLinearLayout* layout = new QGraphicsLinearLayout;
     layout->addItem(m_treeView);
+
+    Plasma::PushButton *buttonClose = new Plasma::PushButton;
+    buttonClose->setText(i18n("Close"));
+    KPushButton *nativeButtonClose = buttonClose->nativeWidget();
+    nativeButtonClose->setIcon(KIcon("dialog-close"));
+    layout->addItem(buttonClose);
+
     m_base->setLayout(layout);
 
     static_cast<Plasma::Corona*>(widget->scene())->addOffscreenWidget(m_base);
     setGraphicsWidget(m_base);
 
-    //m_treeView->nativeWidget()->setItemDelegate(new Plasma::Delegate(this));
-
-    resize(400,300);
+    resize(350,260);
+    setWindowTitle(i18n("Tracklist"));
+    setWindowIcon(KIcon("format-list-unordered"));
+    setResizeHandleCorners(Dialog::All);
 }
 
 TracksDialog::~TracksDialog()
@@ -94,26 +108,28 @@ void TracksDialog::mouseReleaseEvent(QMouseEvent *event)
     Plasma::Dialog::mouseReleaseEvent(event);
 }
 
-void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks)
+void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &info)
 {
 
-    m_tracks = tracks;
-    int number = 1;
+   m_tracks = tracks;
+   m_info = info;
+   int number = 1;
    
-    QStringList headers;
-    headers << i18n("Track") << i18n("Title") << i18n("Duration");
-    m_model->setHorizontalHeaderLabels(headers);
+   QStringList headers;
+   headers << i18n("Track") << i18n("Title") << i18n("Duration");
+   m_model->setHorizontalHeaderLabels(headers);
 
-    foreach (const MBTrackInfo &track, m_tracks) {
-        QTime time;
-        time = time.addMSecs((track.Duration).toInt());
-        QList<QStandardItem *> items; 
-        items << new QStandardItem(QString::number(number));
-        items << new QStandardItem(track.Title);
-        items << new QStandardItem(time.toString("mm:ss"));
-        m_model->appendRow(items);
-        number++;
-    }
+   foreach (const MBTrackInfo &track, m_tracks) {
+       QTime time;
+       time = time.addMSecs((track.Duration).toInt());
+       QList<QStandardItem *> items; 
+       items << new QStandardItem(QString::number(number));
+       items << new QStandardItem(track.Title);
+       items << new QStandardItem(time.toString("mm:ss"));
+       m_model->appendRow(items);
+       number++;
+   }
 
+   m_label->setText(i18n("Artist") + " ");
 
 }

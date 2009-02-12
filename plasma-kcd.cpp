@@ -127,7 +127,7 @@ void Kcd::playSelected(int selection)
 void Kcd::retrieveInformations()
 {
     m_MBManager->discLookup();
-    m_tracksDialog->setTracks(m_MBManager->getTrackList());
+    m_tracksDialog->setTracks(m_MBManager->getTrackList(), m_MBManager->getDiscInfo());
 }
 
 void Kcd::play()
