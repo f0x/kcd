@@ -86,7 +86,6 @@ QGraphicsWidget* Kcd::graphicsWidget()
 
         layout->addItem(new VolumeController(Qt::Vertical, this), 0, 2);
 
-        layout->addItem(extender(), 3, 0);
         m_graphicsWidget->setLayout(layout);
   
         m_positionSlider->setOrientation(Qt::Horizontal);
@@ -120,7 +119,7 @@ void Kcd::init()
 {
     // let's initialize the widget if it is not yet..
 //     graphicsWidget();
-//     static_cast<QGraphicsGridLayout*>(layout())->addItem(extender(), 3, 0);
+    static_cast<QGraphicsGridLayout*>(graphicsWidget()->layout())->addItem(extender(), 3, 0);
 
     Plasma::ExtenderItem *trackList = new Plasma::ExtenderItem(extender());
     trackList->setName("tracklist");
