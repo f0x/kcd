@@ -147,6 +147,7 @@ void VolumeController::mousePressEvent(QGraphicsSceneMouseEvent *event)
         m_volume = (qreal) (m_segmentsRect.height() - event->pos().toPoint().y()) / m_segmentsRect.height();
     }
 
+    emit volumeChanged(m_volume);
     update(m_segmentsRect);
 }
 
@@ -166,5 +167,6 @@ void VolumeController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         m_volume = (qreal) (m_segmentsRect.height() - event->pos().toPoint().y()) / m_segmentsRect.height();
     }
 
+    emit volumeChanged(m_volume);
     update(m_segmentsRect);
 }

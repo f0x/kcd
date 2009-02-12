@@ -45,6 +45,9 @@ private:
     Plasma::IconWidget *m_icon;
     QRect m_segmentsRect;
 
+signals:
+    void volumeChanged(qreal volume);
+
 protected slots:
     void updateColors();
 
