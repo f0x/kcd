@@ -213,9 +213,7 @@ void Kcd::repeatEnabled(bool repeat)
 
 void Kcd::repeatSource()
 {
-   kDebug() << "segnale finished";
-   m_mediaObject->setCurrentSource(m_mediaObject->currentSource());
-   play();
+   m_mediaObject->enqueue(m_mediaObject->currentSource());
 }
 
 void Kcd::viewTrackList()
