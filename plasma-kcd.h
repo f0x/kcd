@@ -93,6 +93,7 @@ class Kcd : public Plasma::PopupApplet
        void randomEnabled(bool);
        void repeatEnabled(bool);
        void repeatSource();
+       void randomSource(int);
 
     signals:
        //void stateChanged(State state);
