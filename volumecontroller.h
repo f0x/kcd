@@ -45,11 +45,15 @@ private:
     Plasma::IconWidget *m_icon;
     QRect m_segmentsRect;
 
+    bool volumeOn;
+
 signals:
     void volumeChanged(qreal volume);
+    void volumeActived(bool);
 
 protected slots:
     void updateColors();
+    void handleVolume();
 
 protected:
     void resizeEvent(QGraphicsSceneResizeEvent*);

@@ -49,6 +49,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
       m_buttonPanel(new Controls(this)),
       m_optionsPanel(new Options(this)),
       m_positionSlider(new Plasma::Slider(this)),
+      m_volume(new VolumeController(Qt::Horizontal, this)),
       m_graphicsWidget(0)
 {
     //setBackgroundHints(DefaultBackground);
@@ -81,7 +82,7 @@ QGraphicsWidget* Kcd::graphicsWidget()
         vlayout->setOrientation(Qt::Vertical);
         QGraphicsLinearLayout* hlayout = new QGraphicsLinearLayout();
         hlayout->setOrientation(Qt::Horizontal);
-        hlayout->addItem(new VolumeController(Qt::Horizontal, this));
+        hlayout->addItem(m_volume);
         hlayout->addItem(m_optionsPanel);
         hlayout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         vlayout->addItem(m_textPanel);
@@ -201,6 +202,12 @@ void Kcd::setupActions()
    connect(m_optionsPanel, SIGNAL(showTrackList()), this, SLOT(viewTrackList()));
    connect(m_optionsPanel, SIGNAL(activeRandom(bool)), this, SLOT(randomEnabled(bool)));
    connect(m_optionsPanel, SIGNAL(activeRepeat(bool)), this, SLOT(repeatEnabled(bool)));
+   connect(m_volume, SIGNAL(volumeActived(bool)), this, SLOT(enableVolume(bool)));
+}
+
+void Kcd::enableVolume(bool active)
+{
+   m_audioOutput->setMuted(!active);
 }
 
 void Kcd::randomEnabled(bool random)

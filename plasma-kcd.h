@@ -44,6 +44,7 @@ class Controls;
 class Options;
 class MBManager;
 class TracksDialog;
+class VolumeController;
 
 // here we define the applet
 class Kcd : public Plasma::PopupApplet
@@ -64,6 +65,7 @@ class Kcd : public Plasma::PopupApplet
        void stop();  
        void prev(); 
        void next(); 
+       void enableVolume(bool);
 
     protected:
        void setupActions();
@@ -77,6 +79,7 @@ class Kcd : public Plasma::PopupApplet
        Phonon::MediaObject* m_mediaObject;
        Phonon::AudioOutput* m_audioOutput;
        Phonon::MediaController* m_mediaController;
+       VolumeController *m_volume;
        MBManager* m_MBManager;
        QGraphicsWidget *m_graphicsWidget;
        TracksDialog *m_tracksDialog;

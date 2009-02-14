@@ -44,11 +44,27 @@ VolumeController::VolumeController(Qt::Orientation orientation, QGraphicsItem *p
 
     setOrientation(orientation);
 
+    volumeOn = true;
+
     connect (Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
+    connect (m_icon, SIGNAL(clicked()), this, SLOT(handleVolume()));
 }
 
 VolumeController::~VolumeController()
 {}
+
+void VolumeController::handleVolume()
+{
+    if (volumeOn) {
+       m_icon->setIcon(MUTED_VOLUME);
+       volumeOn = false;
+       emit volumeActived(false);
+    } else {
+       m_icon->setIcon(HIGH_VOLUME);
+       volumeOn = true;
+       emit volumeActived(true);
+    }
+}
 
 void VolumeController::setOrientation(Qt::Orientation orientation)
 {
