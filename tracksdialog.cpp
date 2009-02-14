@@ -33,8 +33,6 @@
 #include <Plasma/PushButton>
 
 TracksDialog::TracksDialog(QGraphicsWidget *parent) : QGraphicsWidget(parent),
-        isMoving(false),
-//         m_base(new QGraphicsWidget(parent)),
         m_model(new QStandardItemModel(this))
 {
     m_treeView = new Plasma::TreeView(this);
@@ -42,38 +40,22 @@ TracksDialog::TracksDialog(QGraphicsWidget *parent) : QGraphicsWidget(parent),
     m_view = m_treeView->nativeWidget();
     m_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
     QHeaderView *header = m_view->header();
-    header->setMovable(false);
-    header->setResizeMode(QHeaderView::ResizeToContents);
+    header->setHidden(true);
     m_view->setAlternatingRowColors(true); 
     m_treeView->setModel(m_model);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    //layout->setSpacing(10);
     
     m_labelArtist = new Plasma::Label;
     m_labelAlbum = new Plasma::Label;
-   
-//     Plasma::PushButton *buttonClose = new Plasma::PushButton(this);
-//     buttonClose->setText(i18n("Close"));
-//     KPushButton *nativeButtonClose = buttonClose->nativeWidget();
-//     nativeButtonClose->setIcon(KIcon("dialog-close"));
 
     layout->addItem(m_labelArtist);
     layout->addItem(m_labelAlbum);
     layout->addItem(m_treeView);
-    //layout->addItem(buttonClose);
-
+    layout->setSpacing(0);
     setLayout(layout);
 
-//     static_cast<Plasma::Corona*>(widget->scene())->addOffscreenWidget(m_base);
-
-//     resize(350,300);
-//     setWindowTitle(i18n("Tracklist"));
-//     setWindowIcon(KIcon("format-list-unordered"));
-//     setResizeHandleCorners(Dialog::All);
-
     connect(m_view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(playSelected(const QModelIndex &)));
-//     connect(buttonClose, SIGNAL(clicked()), this, SLOT(hide()));
 }
 
 TracksDialog::~TracksDialog()
@@ -93,10 +75,6 @@ void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &i
    m_info = info;
    int number = 1;
    
-//    QStringList headers;
-//    headers << i18n("Track") << i18n("Title") << i18n("Duration");
-//    m_model->setHorizontalHeaderLabels(headers);
-
    foreach (const MBTrackInfo &track, m_tracks) {
        QTime time;
        time = time.addMSecs((track.Duration).toInt());
@@ -112,3 +90,6 @@ void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &i
    m_labelAlbum->setText("<b>" + i18n("Album") + ": </b>  " + m_info.Title);
 
 }
+
+#include "tracksdialog.moc"
+

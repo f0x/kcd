@@ -53,8 +53,9 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
       m_graphicsWidget(0)
 {
     //setBackgroundHints(DefaultBackground);
-    resize(320, 235); // ideal planar size
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
+    setHasConfigurationInterface(false);
+    resize(320, 235); // ideal planar size
 
     m_mediaObject = new Phonon::MediaObject(this);
     m_audioOutput = new Phonon::AudioOutput(Phonon::NoCategory, this);
@@ -64,6 +65,12 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
 
     /** Music Brainz initialisation **/
     m_MBManager = new MBManager();
+
+    trackList = new Plasma::ExtenderItem(extender());
+    trackList->setName("tracklist");
+    trackList->setTitle(i18n("CD Tracks List"));
+    initExtenderItem(trackList);
+    
 }
 
 Kcd::~Kcd()
@@ -106,12 +113,21 @@ QGraphicsWidget* Kcd::graphicsWidget()
     return m_graphicsWidget;
 }
 
-void Kcd::initExtenderItem(Plasma::ExtenderItem *item)
+void Kcd::setupActions()
 {
-    m_tracksDialog = new TracksDialog(item);
-    connect(m_tracksDialog, SIGNAL(changePlayed(int)), this, SLOT(playSelected(int)));
-
-    item->setWidget(m_tracksDialog);
+   connect(m_mediaObject, SIGNAL(metaDataChanged()), this, SLOT(metaData()));
+   connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(updateSlider(qint64)));
+   connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(currentTime(qint64)));
+   connect(m_buttonPanel, SIGNAL(play()), this, SLOT(play()));
+   connect(m_buttonPanel, SIGNAL(pause()), this, SLOT(pause()));
+   connect(m_buttonPanel, SIGNAL(stop()), this, SLOT(stop()));
+   connect(m_buttonPanel, SIGNAL(previous()), this, SLOT(prev()));
+   connect(m_buttonPanel, SIGNAL(next()), this, SLOT(next()));
+   connect(m_positionSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekTo(int)));
+   connect(m_optionsPanel, SIGNAL(showTrackList()), this, SLOT(viewTrackList()));
+   connect(m_optionsPanel, SIGNAL(activeRandom(bool)), this, SLOT(randomEnabled(bool)));
+   connect(m_optionsPanel, SIGNAL(activeRepeat(bool)), this, SLOT(repeatEnabled(bool)));
+   connect(m_volume, SIGNAL(volumeActived(bool)), this, SLOT(enableVolume(bool)));
 }
 
 void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
@@ -121,18 +137,17 @@ void Kcd::handleCd(const Phonon::MediaSource &mediaSource)
    retrieveInformations();
 }
 
+void Kcd::initExtenderItem(Plasma::ExtenderItem *item)
+{
+    m_tracksDialog = new TracksDialog(item);
+    connect(m_tracksDialog, SIGNAL(changePlayed(int)), this, SLOT(playSelected(int)));
+    item->setName("tracklist");
+    item->setWidget(m_tracksDialog);
+}
+
 void Kcd::init()
 {
-    // let's initialize the widget if it is not yet..
-//     graphicsWidget();
     //static_cast<QGraphicsLinearLayout*>(graphicsWidget()->layout())->addItem(extender());
-
-    trackList = new Plasma::ExtenderItem(extender());
-    trackList->setName("tracklist");
-    trackList->setTitle(i18n("CD Tracks List"));
-    initExtenderItem(trackList);
-
-    extender()->setVisible(false);
     setupActions();
     setPopupIcon("media-optical-audio");
 
@@ -186,23 +201,6 @@ void Kcd::next()
       m_mediaController->nextTitle();
       currentTime(0);
    }
-}
-
-void Kcd::setupActions()
-{
-   connect(m_mediaObject, SIGNAL(metaDataChanged()), this, SLOT(metaData()));
-   connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(updateSlider(qint64)));
-   connect(m_mediaObject, SIGNAL(tick(qint64)), this, SLOT(currentTime(qint64)));
-   connect(m_buttonPanel, SIGNAL(play()), this, SLOT(play()));
-   connect(m_buttonPanel, SIGNAL(pause()), this, SLOT(pause()));
-   connect(m_buttonPanel, SIGNAL(stop()), this, SLOT(stop()));
-   connect(m_buttonPanel, SIGNAL(previous()), this, SLOT(prev()));
-   connect(m_buttonPanel, SIGNAL(next()), this, SLOT(next()));
-   connect(m_positionSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekTo(int)));
-   connect(m_optionsPanel, SIGNAL(showTrackList()), this, SLOT(viewTrackList()));
-   connect(m_optionsPanel, SIGNAL(activeRandom(bool)), this, SLOT(randomEnabled(bool)));
-   connect(m_optionsPanel, SIGNAL(activeRepeat(bool)), this, SLOT(repeatEnabled(bool)));
-   connect(m_volume, SIGNAL(volumeActived(bool)), this, SLOT(enableVolume(bool)));
 }
 
 void Kcd::enableVolume(bool active)

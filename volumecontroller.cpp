@@ -55,27 +55,28 @@ VolumeController::~VolumeController()
 
 void VolumeController::handleVolume()
 {
-    if (volumeOn) {
-       m_icon->setIcon(MUTED_VOLUME);
-       volumeOn = false;
-       emit volumeActived(false);
-    } else {
-       m_icon->setIcon(HIGH_VOLUME);
-       volumeOn = true;
-       emit volumeActived(true);
-    }
+  if (volumeOn) {
+     m_icon->setIcon(MUTED_VOLUME);
+     volumeOn = false;
+     emit volumeActived(false);
+  } else {
+     m_icon->setIcon(HIGH_VOLUME);
+     volumeOn = true;
+     emit volumeActived(true);
+  }
 }
 
 void VolumeController::setOrientation(Qt::Orientation orientation)
 {
-    m_orientation = orientation;
-    if (m_orientation == Qt::Horizontal) {
-        setMaximumHeight(ICON_SIZE);
-    } else {
-        setMaximumWidth(ICON_SIZE);
-    }
+  m_orientation = orientation;
+  if (m_orientation == Qt::Horizontal) {
+      setMaximumHeight(ICON_SIZE);
+      //resize(100, 30);
+  } else {
+      setMaximumWidth(ICON_SIZE);
+  }
 
-    //update();
+  //update();
 }
 
 void VolumeController::resizeEvent(QGraphicsSceneResizeEvent *event)

@@ -37,7 +37,7 @@ class TracksDialog : public QGraphicsWidget
     Q_OBJECT
 
     public:
-        TracksDialog(QGraphicsWidget *parent = 0);
+        TracksDialog(QGraphicsWidget *parent);
         ~TracksDialog();
 
         void setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &info);
@@ -48,8 +48,8 @@ class TracksDialog : public QGraphicsWidget
 //         void mouseReleaseEvent(QMouseEvent *event);
 
     private:
-        bool isMoving;
-        QPoint startPos;
+        //bool isMoving;
+        //QPoint startPos;
 //         QGraphicsWidget *m_base;
 
         Plasma::TreeView* m_treeView;
