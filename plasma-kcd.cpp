@@ -52,7 +52,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
       m_graphicsWidget(0)
 {
     //setBackgroundHints(DefaultBackground);
-    resize(340, 225); // ideal planar size
+    resize(320, 235); // ideal planar size
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
 
     m_mediaObject = new Phonon::MediaObject(this);
@@ -74,41 +74,22 @@ QGraphicsWidget* Kcd::graphicsWidget()
 {
     if (!m_graphicsWidget) {
         m_graphicsWidget = new QGraphicsWidget(this);
-        //m_textPanel->show();
-        //QGraphicsGridLayout* layout = new QGraphicsGridLayout();
+
         QGraphicsLinearLayout *layout = new QGraphicsLinearLayout();
         layout->setOrientation(Qt::Vertical);
         QGraphicsLinearLayout* vlayout = new QGraphicsLinearLayout();
         vlayout->setOrientation(Qt::Vertical);
-        //layout->addItem(vlayout);
-    
         QGraphicsLinearLayout* hlayout = new QGraphicsLinearLayout();
         hlayout->setOrientation(Qt::Horizontal);
-        hlayout->addItem(m_optionsPanel);
         hlayout->addItem(new VolumeController(Qt::Horizontal, this));
-        //layout->addItem(m_textPanel, 0, 0);
-        //m_buttonPanel->setDisplayedButtons(Controls::AllButtons);
-        
+        hlayout->addItem(m_optionsPanel);
+        hlayout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         vlayout->addItem(m_textPanel);
         vlayout->addItem(m_buttonPanel);
         vlayout->addItem(m_positionSlider);
+        vlayout->insertStretch(1, 10);
         layout->addItem(hlayout);
         layout->addItem(vlayout);
-        //hlayout->addItem(new VolumeController(Qt::Vertical, this));
-        //hlayout->addItem(m_optionsPanel);
-        //hlayout->insertStretch(1, 100);
-        //layout->addItem(m_buttonPanel);
-        //layout->addItem(m_positionSlider);
-        //QGraphicsLinearLayout* h2layout = new QGraphicsLinearLayout();
-        //h2layout->setOrientation(Qt::Horizontal);
-        //h2layout->addItem(m_positionSlider);
-        //h2layout->addItem(new VolumeController(Qt::Horizontal, this));
-        //layout->addItem(h2layout);
-        //layout->addItem(m_buttonPanel, 1, 0);
-        //layout->addItem(m_positionSlider, 2, 0);
-        //m_optionsPanel->show();
-        //layout->addItem(m_optionsPanel, 0, 1);
-
         //layout->addItem(new VolumeController(Qt::Vertical, this), 0, 2);
 
         m_graphicsWidget->setLayout(layout);
@@ -118,8 +99,7 @@ QGraphicsWidget* Kcd::graphicsWidget()
         m_positionSlider->setMaximum(0);
         m_positionSlider->setValue(0);
  
-        m_graphicsWidget->setMinimumSize(300, 200);
-        //m_positionSlider->setEnabled(false);
+        //m_graphicsWidget->setMinimumSize(300, 200);
     }
 
     return m_graphicsWidget;
@@ -144,9 +124,9 @@ void Kcd::init()
 {
     // let's initialize the widget if it is not yet..
 //     graphicsWidget();
-    //static_cast<QGraphicsGridLayout*>(graphicsWidget()->layout())->addItem(extender(), 3, 0);
+    //static_cast<QGraphicsLinearLayout*>(graphicsWidget()->layout())->addItem(extender());
 
-    Plasma::ExtenderItem *trackList = new Plasma::ExtenderItem(extender());
+    trackList = new Plasma::ExtenderItem(extender());
     trackList->setName("tracklist");
     trackList->setTitle(i18n("CD Tracks List"));
     initExtenderItem(trackList);

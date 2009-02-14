@@ -125,8 +125,8 @@ void Controls::setDisplayedButtons(Buttons buttons)
     delete layout();
 
     QGraphicsLinearLayout* newLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-
-    newLayout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    newLayout->setMinimumSize(100, 40);
+    newLayout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     showHideButton(newLayout, m_prev, (buttons & PreviousButton));
     showHideButton(newLayout, m_playpause, (buttons & PlayPauseButton));
@@ -135,7 +135,7 @@ void Controls::setDisplayedButtons(Buttons buttons)
     //newLayout->addStretch();
     setLayout(newLayout);
 
-    kDebug() << "Minimum size after changing buttons:" << minimumSize();
+    //kDebug() << "Minimum size after changing buttons:" << minimumSize();
 }
 
 // vim: sw=4 sts=4 et tw=100

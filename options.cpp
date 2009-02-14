@@ -33,7 +33,11 @@ Options::Options(QGraphicsWidget *parent)
       m_tracklist(new Plasma::IconWidget(this)),
       m_random(new Plasma::IconWidget(this)),
       m_loop(new Plasma::IconWidget(this))
+     // m_volume(new Plasma::IconWidget(this))
 {
+ 
+   //m_volume->setIcon("audio-volume-high");
+
    m_tracklist->setIcon("format-list-unordered");
    connect(m_tracklist, SIGNAL(clicked()), this, SIGNAL(showTrackList()));
    //m_tracklist->setMinimumSize(m_tracklist->sizeFromIconSize(10));
@@ -62,15 +66,12 @@ Options::Options(QGraphicsWidget *parent)
 
    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
    layout->setOrientation(Qt::Horizontal);
-   layout->addItem(m_tracklist);
+   //layout->addItem(m_volume);
    layout->addItem(m_random);
    layout->addItem(m_loop);
-   layout->setAlignment(m_tracklist, Qt::AlignRight);
-   layout->setAlignment(m_random, Qt::AlignRight);
-   layout->setAlignment(m_loop, Qt::AlignRight);
-   //layout->setSpacing(5);
+   layout->addItem(m_tracklist);
+   layout->setMaximumSize(1000, 40);
    setLayout(layout);
-
    randomFlag = false;
    loopFlag = false;
 }

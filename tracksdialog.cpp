@@ -53,15 +53,15 @@ TracksDialog::TracksDialog(QGraphicsWidget *parent) : QGraphicsWidget(parent),
     m_labelArtist = new Plasma::Label;
     m_labelAlbum = new Plasma::Label;
    
-    Plasma::PushButton *buttonClose = new Plasma::PushButton(this);
-    buttonClose->setText(i18n("Close"));
-    KPushButton *nativeButtonClose = buttonClose->nativeWidget();
-    nativeButtonClose->setIcon(KIcon("dialog-close"));
+//     Plasma::PushButton *buttonClose = new Plasma::PushButton(this);
+//     buttonClose->setText(i18n("Close"));
+//     KPushButton *nativeButtonClose = buttonClose->nativeWidget();
+//     nativeButtonClose->setIcon(KIcon("dialog-close"));
 
     layout->addItem(m_labelArtist);
     layout->addItem(m_labelAlbum);
     layout->addItem(m_treeView);
-    layout->addItem(buttonClose);
+    //layout->addItem(buttonClose);
 
     setLayout(layout);
 
@@ -86,30 +86,6 @@ void TracksDialog::playSelected(const QModelIndex &modelIndex)
     emit changePlayed(row);
 }
 
-// void TracksDialog::mousePressEvent(QMouseEvent *event)
-// {
-//     if (!inControlArea(event->pos())) {
-//         isMoving = true;
-//         startPos = event->pos();
-//     }
-//     Plasma::Dialog::mousePressEvent(event);
-// }
-// 
-// void TracksDialog::mouseMoveEvent(QMouseEvent *event)
-// { 
-//     if (isMoving) {
-//         QPoint offset( event->pos().x()-startPos.x(), event->pos().y()-startPos.y());
-//         move(pos()+=offset);
-//     }
-//     Plasma::Dialog::mouseMoveEvent(event);
-// }
-// 
-// void TracksDialog::mouseReleaseEvent(QMouseEvent *event)
-// { 
-//     isMoving = false;
-//     Plasma::Dialog::mouseReleaseEvent(event);
-// }
-
 void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &info)
 {
 
@@ -117,9 +93,9 @@ void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &i
    m_info = info;
    int number = 1;
    
-   QStringList headers;
-   headers << i18n("Track") << i18n("Title") << i18n("Duration");
-   m_model->setHorizontalHeaderLabels(headers);
+//    QStringList headers;
+//    headers << i18n("Track") << i18n("Title") << i18n("Duration");
+//    m_model->setHorizontalHeaderLabels(headers);
 
    foreach (const MBTrackInfo &track, m_tracks) {
        QTime time;

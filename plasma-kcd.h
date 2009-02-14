@@ -73,13 +73,13 @@ class Kcd : public Plasma::PopupApplet
        Controls* m_buttonPanel;
        Options* m_optionsPanel;
        Plasma::Slider* m_positionSlider;
+       Plasma::ExtenderItem *trackList;
        Phonon::MediaObject* m_mediaObject;
        Phonon::AudioOutput* m_audioOutput;
        Phonon::MediaController* m_mediaController;
        MBManager* m_MBManager;
        QGraphicsWidget *m_graphicsWidget;
        TracksDialog *m_tracksDialog;
-
 
     private slots:
        void handleCd(const Phonon::MediaSource &);
