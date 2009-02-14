@@ -56,13 +56,11 @@ void Controls::playPauseClicked()
      if (m_state == Playing) {
         m_state = Paused;
         m_playpause->setIcon("media-playback-start");
-//         m_controller->associateWidget(m_playpause, "play");
         emit pause();
     }
     else {
         m_state = Playing;
         m_playpause->setIcon("media-playback-pause");
-//      m_controller->associateWidget(m_playpause, "pause");
         emit play();
     }
 }
@@ -72,40 +70,12 @@ void Controls::stateChanged(State state)
     if (m_state != state) {
         if (state == Playing) {
             m_playpause->setIcon("media-playback-pause");
-            //m_controller->associateWidget(m_playpause, "pause");
         } else {
             m_playpause->setIcon("media-playback-start");
-            //m_controller->associateWidget(m_playpause, "play");
         }
-        /* Probably not needed
-        if (state == NoPlayer) {
-            setController(0);
-        }
-        */
         m_state = state;
     }
 }
-
-// void Controls::setController(Plasma::Service* controller)
-// {
-//     m_controller = controller;
-// 
-//     if (!controller) {
-//         m_prev->setEnabled(false);
-//         m_next->setEnabled(false);
-//         m_stop->setEnabled(false);
-//         m_playpause->setEnabled(false);
-//     } else {
-//         controller->associateWidget(m_prev, "previous");
-//         controller->associateWidget(m_next, "next");
-//         controller->associateWidget(m_stop, "stop");
-//         if (m_state == Playing) {
-//             controller->associateWidget(m_playpause, "pause");
-//         } else {
-//             controller->associateWidget(m_playpause, "play");
-//         }
-//     }
-// }
 
 Controls::Buttons Controls::displayedButtons() const
 {

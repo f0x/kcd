@@ -2,7 +2,7 @@
 Name=Kcd
 Name[it]=Kcd
 Comment=A quick cdaudio player
-Comment[it]=Un rapido lettore di cdaudio
+Comment[it]=Un rapido lettore di cd audio
 Type=Service
 Icon=media-optical-audio
 

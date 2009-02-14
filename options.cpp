@@ -36,7 +36,7 @@ Options::Options(QGraphicsWidget *parent)
 {
    m_tracklist->setIcon("format-list-unordered");
    connect(m_tracklist, SIGNAL(clicked()), this, SIGNAL(showTrackList()));
-   m_tracklist->setMinimumSize(m_tracklist->sizeFromIconSize(10));
+   //m_tracklist->setMinimumSize(m_tracklist->sizeFromIconSize(10));
 
    Plasma::ToolTipContent data;
    data.setMainText(i18n("Tracklist"));
@@ -46,7 +46,7 @@ Options::Options(QGraphicsWidget *parent)
 
    m_random->setIcon("roll");
    connect(m_random, SIGNAL(clicked()), this, SLOT(randomTrack()));
-   m_random->setMinimumSize(m_random->sizeFromIconSize(10));
+   //m_random->setMinimumSize(m_random->sizeFromIconSize(10));
    data.setMainText(i18n("Random - off"));
    data.setSubText(i18n("Play random track"));
    data.setImage(KIcon("roll").pixmap(IconSize(KIconLoader::Desktop)));
@@ -54,18 +54,21 @@ Options::Options(QGraphicsWidget *parent)
 
    m_loop->setIcon("object-rotate-right");
    connect(m_loop, SIGNAL(clicked()), this, SLOT(loopList()));
-   m_loop->setMinimumSize(m_loop->sizeFromIconSize(10));
+   //m_loop->setMinimumSize(m_loop->sizeFromIconSize(10));
    data.setMainText(i18n("Repeat - off"));
    data.setSubText(i18n("Play again the tracklist"));
    data.setImage(KIcon("object-rotate-right").pixmap(IconSize(KIconLoader::Desktop)));
    Plasma::ToolTipManager::self()->setContent(m_loop, data);
 
    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
-   layout->setOrientation(Qt::Vertical);
+   layout->setOrientation(Qt::Horizontal);
    layout->addItem(m_tracklist);
    layout->addItem(m_random);
    layout->addItem(m_loop);
-   layout->setSpacing(20);
+   layout->setAlignment(m_tracklist, Qt::AlignRight);
+   layout->setAlignment(m_random, Qt::AlignRight);
+   layout->setAlignment(m_loop, Qt::AlignRight);
+   //layout->setSpacing(5);
    setLayout(layout);
 
    randomFlag = false;

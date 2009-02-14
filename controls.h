@@ -84,7 +84,6 @@ private:
     QGraphicsLinearLayout* m_layout;
 
     State m_state;
-    //Plasma::Service* m_controller;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Controls::Buttons)
