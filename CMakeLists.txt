@@ -15,14 +15,15 @@ include_directories(
 )
 
 # We add our source code here
-set(kcd_SRCS plasma-kcd.cpp
+set(kcd_SRCS kcd.cpp
              infopanel.cpp
              controls.cpp
              cdhandler.cpp
              mbmanager.cpp
              options.cpp
-             volumecontroller.cpp
+#             volumecontroller.cpp
              tracksdialog.cpp
+             kcdmeter.cpp
 )
 
 # Now make sure all files get to the right place
@@ -39,9 +40,3 @@ install(TARGETS plasma_applet_kcd
  
 install(FILES plasma-applet-kcd.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})
-
-
-#install(FILES
-#        DESTINATION ${DATA_INSTALL_DIR}/desktoptheme/default/widgets/)
-
-#kde4_install_icons(${ICON_INSTALL_DIR})

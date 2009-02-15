@@ -14,30 +14,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #ifndef CDHANDLER_H
 #define CDHANDLER_H
 
 #include <QObject>
 
 namespace Phonon {
-    class MediaSource;
+   class MediaSource;
 };
 
 class CdHandler : public QObject
 {
-    Q_OBJECT
-public:
-    CdHandler(QObject *parent = 0);
-    ~CdHandler();
+   Q_OBJECT
 
-    void checkForPreviousDevices();
+   public:
+       CdHandler(QObject *parent = 0);
+       ~CdHandler();
 
-signals:
-    void cdInserted(const Phonon::MediaSource &);
-    void cdEjected();
+   void checkForPreviousDevices();
 
-protected slots:
-    void emitCdInserted(const QString &);
+   signals:
+       void cdInserted(const Phonon::MediaSource &);
+       void cdEjected();
+
+   protected slots:
+       void emitCdInserted(const QString &);
 };
 
 #endif

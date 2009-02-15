@@ -23,36 +23,41 @@
 #include <QGraphicsWidget>
 
 namespace Plasma {
-    class IconWidget;
+   class IconWidget;
 }
 
 class QGraphicsLinearLayout;
+class KcdMeter;
 
 class Options : public QGraphicsWidget
 {
-    Q_OBJECT
+   Q_OBJECT
     
-    public:
-        Options(QGraphicsWidget *parent = 0);
-        ~Options();
+   public:
+       Options(QGraphicsWidget *parent = 0);
+       ~Options();
 
-    private:
-        Plasma::IconWidget* m_tracklist;
-        Plasma::IconWidget* m_random;
-        Plasma::IconWidget* m_loop;
-        //Plasma::IconWidget* m_volume;
+   private:
+       Plasma::IconWidget* m_volume;
+       KcdMeter *m_meter;
+       Plasma::IconWidget* m_tracklist;
+       Plasma::IconWidget* m_random;
+       Plasma::IconWidget* m_loop;
  
-        bool randomFlag;
-        bool loopFlag;
+       bool randomFlag;
+       bool loopFlag;
+       bool volumeFlag;
 
-    private slots:
-        void randomTrack();
-        void loopList();
+   private slots:
+       void randomTrack();
+       void loopList();
+       void handleVolume();
 
-    signals:
-        void showTrackList();
-        void activeRandom(bool);
-        void activeRepeat(bool);
+   signals:
+       void showTrackList();
+       void activeRandom(bool);
+       void activeRepeat(bool);
+       void volumeActived(bool);
 };
 
 #endif

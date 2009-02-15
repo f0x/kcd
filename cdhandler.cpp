@@ -14,6 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "cdhandler.h"
 
 #include <Phonon/MediaObject>
@@ -25,34 +26,33 @@
 
 CdHandler::CdHandler(QObject *parent) : QObject(parent)
 {
-    connect (Solid::DeviceNotifier::instance(), SIGNAL(deviceAdded(const QString&)),
-             this, SLOT(emitCdInserted(const QString &)));
+   connect (Solid::DeviceNotifier::instance(), SIGNAL(deviceAdded(const QString&)),
+            this, SLOT(emitCdInserted(const QString &)));
 }
 
 CdHandler::~CdHandler()
-{}
+{
+}
 
 void CdHandler::checkForPreviousDevices()
 {
-    foreach (const Solid::Device &device, Solid::Device::allDevices()) {
-        emitCdInserted(device.udi());
-    }
+   foreach (const Solid::Device &device, Solid::Device::allDevices()) {
+       emitCdInserted(device.udi());
+   }
 }
 
 void CdHandler::emitCdInserted(const QString &udi)
 {
-    Solid::Device device(udi);
-    if (!device.is<Solid::OpticalDisc>()) {
+   Solid::Device device(udi);
+      if (!device.is<Solid::OpticalDisc>()) {
+          return;
+      }
+
+   Solid::OpticalDisc *disc = device.as<Solid::OpticalDisc>();
+
+   if (disc->availableContent() != Solid::OpticalDisc::Audio) {
        return;
-    }
+   }
 
-    Solid::OpticalDisc *disc = device.as<Solid::OpticalDisc>();
-
-    if (disc->availableContent() != Solid::OpticalDisc::Audio) {
-        return;
-     }
-
-    //kDebug() << "CD AUDIO";
-    //kDebug() << udi;
-    emit cdInserted(Phonon::MediaSource(Phonon::Cd, udi));
+   emit cdInserted(Phonon::MediaSource(Phonon::Cd, udi));
 }

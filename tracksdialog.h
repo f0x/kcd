@@ -34,41 +34,30 @@ class QModelIndex;
 
 class TracksDialog : public QGraphicsWidget
 {
-    Q_OBJECT
+   Q_OBJECT
 
-    public:
-        TracksDialog(QGraphicsWidget *parent);
-        ~TracksDialog();
+   public:
+       TracksDialog(QGraphicsWidget *parent);
+       ~TracksDialog();
 
-        void setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &info);
+       void setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &info);
 
-//     protected:
-//         void mouseMoveEvent(QMouseEvent *event);
-//         void mousePressEvent(QMouseEvent *event);
-//         void mouseReleaseEvent(QMouseEvent *event);
+   private:
+       Plasma::TreeView* m_treeView;
+       QTreeView*  m_view;
 
-    private:
-        //bool isMoving;
-        //QPoint startPos;
-//         QGraphicsWidget *m_base;
+       QStandardItemModel *m_model;
+       QList<MBTrackInfo> m_tracks;
+       DiscInfo m_info;
 
-        Plasma::TreeView* m_treeView;
-        QTreeView*  m_view;
+       Plasma::Label *m_labelArtist;
+       Plasma::Label *m_labelAlbum;
 
-        QStandardItemModel *m_model;
-        QList<MBTrackInfo> m_tracks;
-        DiscInfo m_info;
+   private slots:
+       void playSelected(const QModelIndex &);
 
-        Plasma::Label *m_labelArtist;
-        Plasma::Label *m_labelAlbum;
-
-    private slots:
-        void playSelected(const QModelIndex &);
-
-    signals:
-        void changePlayed(int);
-
+   signals:
+       void changePlayed(int);
 };
 
 #endif
-

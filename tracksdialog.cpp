@@ -33,29 +33,30 @@
 #include <Plasma/PushButton>
 
 TracksDialog::TracksDialog(QGraphicsWidget *parent) : QGraphicsWidget(parent),
-        m_model(new QStandardItemModel(this))
+                           m_model(new QStandardItemModel(this))
 {
-    m_treeView = new Plasma::TreeView(this);
+   m_treeView = new Plasma::TreeView(this);
+   m_treeView->setModel(m_model);
 
-    m_view = m_treeView->nativeWidget();
-    m_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    QHeaderView *header = m_view->header();
-    header->setHidden(true);
-    m_view->setAlternatingRowColors(true); 
-    m_treeView->setModel(m_model);
+   m_view = m_treeView->nativeWidget();
+   m_view->setEditTriggers(QAbstractItemView::NoEditTriggers);
+   m_view->setAlternatingRowColors(true); 
 
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+   QHeaderView *header = m_view->header();
+   header->setHidden(true);   
     
-    m_labelArtist = new Plasma::Label;
-    m_labelAlbum = new Plasma::Label;
+   m_labelArtist = new Plasma::Label;
+   m_labelAlbum = new Plasma::Label;
 
-    layout->addItem(m_labelArtist);
-    layout->addItem(m_labelAlbum);
-    layout->addItem(m_treeView);
-    layout->setSpacing(0);
-    setLayout(layout);
+   QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+   layout->addItem(m_labelArtist);
+   layout->addItem(m_labelAlbum);
+   layout->addItem(m_treeView);
+   layout->setSpacing(0);
 
-    connect(m_view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(playSelected(const QModelIndex &)));
+   setLayout(layout);
+
+   connect(m_view, SIGNAL(clicked(const QModelIndex &)), this, SLOT(playSelected(const QModelIndex &)));
 }
 
 TracksDialog::~TracksDialog()
@@ -64,13 +65,12 @@ TracksDialog::~TracksDialog()
 
 void TracksDialog::playSelected(const QModelIndex &modelIndex)
 {
-    int row = modelIndex.row();
-    emit changePlayed(row);
+   int row = modelIndex.row();
+   emit changePlayed(row);
 }
 
 void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &info)
 {
-
    m_tracks = tracks;
    m_info = info;
    int number = 1;
@@ -89,7 +89,10 @@ void TracksDialog::setTracks(const QList<MBTrackInfo> &tracks, const DiscInfo &i
    m_labelArtist->setText("<b>" + i18n("Artist") + ": </b>" + m_info.Artist);
    m_labelAlbum->setText("<b>" + i18n("Album") + ": </b>  " + m_info.Title);
 
+   m_view->resizeColumnToContents(0);
+   m_view->resizeColumnToContents(1);
+   m_view->resizeColumnToContents(2);
+
 }
 
 #include "tracksdialog.moc"
-

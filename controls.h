@@ -24,8 +24,6 @@
 #include <QGraphicsWidget>
 #include <QFlags>
 
-#include "plasma-kcd.h"
-
 namespace Plasma {
     class IconWidget;
 }
@@ -33,59 +31,58 @@ class QGraphicsLinearLayout;
 
 class Controls : public QGraphicsWidget
 {
-    Q_OBJECT
+   Q_OBJECT
 
-public:
-    enum Button
-    {
-        NoButtons = 0,
-        PlayPauseButton = 1,
-        StopButton = 2,
-        PreviousButton = 4,
-        NextButton = 8,
-        AllButtons = 15
-    };
+   public:
+       enum Button
+       {
+           NoButtons = 0,
+           PlayPauseButton = 1,
+           StopButton = 2,
+           PreviousButton = 4,
+           NextButton = 8,
+           AllButtons = 15
+       };
 
-enum State
-    {
-        Playing = 0,
-        Paused,
-        Stopped
-    };
+       enum State
+       {
+           Playing = 0,
+           Paused,
+           Stopped
+       };
 
-    Q_DECLARE_FLAGS( Buttons, Button )
+       Q_DECLARE_FLAGS( Buttons, Button )
 
-    Controls(QGraphicsWidget *parent = 0);
-    ~Controls();
+       Controls(QGraphicsWidget *parent = 0);
+       ~Controls();
 
-    Buttons displayedButtons() const;
-    void setDisplayedButtons(Buttons buttons);
+       Buttons displayedButtons() const;
+       void setDisplayedButtons(Buttons buttons);
 
-public slots:
-    void stateChanged(State state);
-    //void setController(Plasma::Service* controller);
+   public slots:
+       void stateChanged(State state);
 
-signals:
-    void play();
-    void pause();
-    void stop();
-    void previous();
-    void next();
+   signals:
+       void play();
+       void pause();
+       void stop();
+       void previous();
+       void next();
 
-private slots:
-    void playPauseClicked();
+   private slots:
+       void playPauseClicked();
 
-private:
-    Plasma::IconWidget* m_playpause;
-    Plasma::IconWidget* m_stop;
-    Plasma::IconWidget* m_prev;
-    Plasma::IconWidget* m_next;
+   private:
+       Plasma::IconWidget* m_playpause;
+       Plasma::IconWidget* m_stop;
+       Plasma::IconWidget* m_prev;
+       Plasma::IconWidget* m_next;
 
-    QGraphicsLinearLayout* m_layout;
+       QGraphicsLinearLayout* m_layout;
 
-    State m_state;
+       State m_state;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Controls::Buttons)
 
-#endif // CONTROLS_H
+#endif

@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
+
 #include "infopanel.h"
 
 #include <Plasma/Label>
@@ -81,10 +82,7 @@ void InfoPanel::updateLabels()
     m_artistText->setText(fm.elidedText(m_metadata["Artist"], Qt::ElideMiddle, m_artistText->size().width()));
     m_albumText->setText(fm.elidedText(m_metadata["Album"], Qt::ElideMiddle, m_artistText->size().width()));
     m_titleText->setText(fm.elidedText(m_metadata["Title"], Qt::ElideMiddle, m_artistText->size().width()));
-//     m_timeText->setText(m_metadata["Time"]);
 
-    // dirty hack to make sure the Artist: label is in line
-    // FIXME: does this ever happen in plasma, or just in the plasmoidviewer?
     m_layout->invalidate();
 }
 
@@ -93,4 +91,3 @@ void InfoPanel::setCurrentTime(const QString &time)
     m_timeText->setText(time);
 }
 
-// vim: sw=4 sts=4 et tw=100
