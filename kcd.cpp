@@ -137,8 +137,9 @@ void Kcd::insertMetaData()
    metaData["Title"] = QString::number(m_mediaController->currentTitle()) + " - " + trackInfo.Title;
    metaData["Time"] = trackInfo.Duration;
    metaData["Album"] = m_MBManager->getDiscInfo().Title;
-
+   //kDebug() << metaData;
    m_textPanel->updateMetadata(metaData);
+   
    m_positionSlider->setMaximum(trackInfo.Duration.toInt() / 1000);
    currentTime(0);
 }

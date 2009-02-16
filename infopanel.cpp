@@ -25,6 +25,8 @@
 #include <QGraphicsGridLayout>
 #include <QLabel>
 
+#include <KDebug>
+
 InfoPanel::InfoPanel(QGraphicsWidget *parent)
     : QGraphicsWidget(parent),
       m_artistLabel(new Plasma::Label(this)),
@@ -82,7 +84,9 @@ void InfoPanel::updateLabels()
     m_artistText->setText(fm.elidedText(m_metadata["Artist"], Qt::ElideMiddle, m_artistText->size().width()));
     m_albumText->setText(fm.elidedText(m_metadata["Album"], Qt::ElideMiddle, m_artistText->size().width()));
     m_titleText->setText(fm.elidedText(m_metadata["Title"], Qt::ElideMiddle, m_artistText->size().width()));
-
+    
+    kDebug() << m_metadata;
+   
     m_layout->invalidate();
 }
 

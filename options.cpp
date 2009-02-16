@@ -84,9 +84,11 @@ Options::Options(QGraphicsWidget *parent)
    layout->setStretchFactor(m_meter, 20);
    layout->setSpacing(0);
    //layout->setMaximumSize(500,50);
-
-   layout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
+   //layout->setMaximumHeight(20);;
+   //setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+   layout->setAlignment(m_random, Qt::AlignRight);
+   layout->setAlignment(m_loop, Qt::AlignRight);
+   layout->setAlignment(m_tracklist, Qt::AlignRight);
    setLayout(layout);
 
    randomFlag = false;

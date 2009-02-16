@@ -27,6 +27,8 @@ KcdMeter::KcdMeter(QGraphicsWidget *parent)
 {
     //label = new WolfLabel(this);
     //label->setResizeFont(true,1);
+    //resize(100,20);
+    setMaximumHeight(25);
 }
 
 KcdMeter::~KcdMeter() {
