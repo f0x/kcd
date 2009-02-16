@@ -85,7 +85,7 @@ void InfoPanel::updateLabels()
     m_albumText->setText(fm.elidedText(m_metadata["Album"], Qt::ElideMiddle, m_artistText->size().width()));
     m_titleText->setText(fm.elidedText(m_metadata["Title"], Qt::ElideMiddle, m_artistText->size().width()));
     
-    kDebug() << m_metadata;
+    //kDebug() << m_metadata;
    
     m_layout->invalidate();
 }

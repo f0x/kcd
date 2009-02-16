@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=Kcd
 Name[it]=Kcd
-Comment=A quick cdaudio player
-Comment[it]=Un rapido lettore di cd audio
+Comment=A simple cd audio player
+Comment[it]=Un semplice lettore di cd audio
 Type=Service
 Icon=media-optical-audio
 

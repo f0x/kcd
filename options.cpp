@@ -39,12 +39,13 @@ Options::Options(QGraphicsWidget *parent)
 {
  
    m_volume->setIcon("audio-volume-high");
-   //m_volume->setMinimumSize(m_random->sizeFromIconSize(10));
    connect (m_volume, SIGNAL(clicked()), this, SLOT(handleVolume()));
+   //m_volume->setMinimumSize(m_random->sizeFromIconSize(10));
 
    m_meter->setMinimum(0);
-   m_meter->setMaximum(100);
+   m_meter->setMaximum(10);
    m_meter->setMeterType(Plasma::Meter::BarMeterHorizontal);
+   connect (m_meter, SIGNAL(valueChanged(int)), this, SIGNAL(volumeChanged(int)));
 
    m_tracklist->setIcon("format-list-unordered");
    m_tracklist->setMinimumSize(m_random->sizeFromIconSize(10));
@@ -83,12 +84,10 @@ Options::Options(QGraphicsWidget *parent)
    layout->addItem(m_tracklist);
    layout->setStretchFactor(m_meter, 20);
    layout->setSpacing(0);
-   //layout->setMaximumSize(500,50);
-   //layout->setMaximumHeight(20);;
-   //setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
    layout->setAlignment(m_random, Qt::AlignRight);
    layout->setAlignment(m_loop, Qt::AlignRight);
    layout->setAlignment(m_tracklist, Qt::AlignRight);
+   layout->setItemSpacing(1, 10);
    setLayout(layout);
 
    randomFlag = false;
@@ -99,7 +98,6 @@ Options::Options(QGraphicsWidget *parent)
 Options::~Options()
 {
 }
-
 
 void Options::randomTrack()
 {
@@ -151,4 +149,9 @@ void Options::handleVolume()
      volumeFlag = true;
      emit volumeActived(true);
   }
+}
+
+void Options::setMeterValue(int value)
+{
+   m_meter->setValue(value);
 }

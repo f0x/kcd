@@ -25,25 +25,10 @@
 KcdMeter::KcdMeter(QGraphicsWidget *parent)
     : Plasma::Meter(parent)
 {
-    //label = new WolfLabel(this);
-    //label->setResizeFont(true,1);
-    //resize(100,20);
     setMaximumHeight(25);
 }
 
 KcdMeter::~KcdMeter() {
-}
-
-void KcdMeter::setPosition(const int pos, const int total)
-{
-   setMaximum(total);
-   setValue(pos);
-   if (total != 0) {
-       qreal t = total;
-       int n = (pos/t)*100;
-       //label->setText(QVariant(n).toString() + "%");
-       //updateLabel(size());
-   }
 }
 
 void KcdMeter::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -66,36 +51,6 @@ void KcdMeter::mousePressEvent(QGraphicsSceneMouseEvent *event)
        setValue(value);
        emit valueChanged(value);
    }
-}
-
-void KcdMeter::resizeEvent(QGraphicsSceneResizeEvent *event) {
-    Plasma::Meter::resizeEvent(event);
-
-    //updateLabel(event->newSize());
-}
-
-void KcdMeter::updateLabel(QSizeF size) 
-{
-//    if (meterType() == BarMeterHorizontal) {
-//        if (size.height() > 7) {
-//            label->show();
-//            label->resize(size.width(),label->labelSize().height());
-//            qreal y = (size.height() - label->size().height())/2.0;
-//            label->setPos(0,y);
-//         }
-//         else
-//         label->hide();
-//    }
-//    else if (meterType() == BarMeterVertical) {
-//        if (size.width() > 7) {
-//            label->show();
-//            label->resize(size.width(),label->labelSize().height());
-//            qreal y = (size.height() - label->size().height())/2.0;
-//            label->setPos(0,y);
-//    }
-//    else 
-//        label->hide();
-//    }
 }
 
 #include "kcdmeter.moc"

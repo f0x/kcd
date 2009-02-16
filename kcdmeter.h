@@ -34,16 +34,9 @@ class KcdMeter : public Plasma::Meter
        ~KcdMeter(void);
 
        void mousePressEvent(QGraphicsSceneMouseEvent *event);
-       void resizeEvent(QGraphicsSceneResizeEvent *event);
-
-   public slots:
-       void setPosition(const int pos, const int total);
 
    signals:
        void valueChanged(int value);
-
-   private:
-       void updateLabel(QSizeF size);
 };
 
 #endif

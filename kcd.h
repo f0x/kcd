@@ -77,6 +77,7 @@ class Kcd : public Plasma::PopupApplet
        void repeatEnabled(bool);
        void repeatSource();
        void randomSource(int);
+       void updateVolume(int);
 
    public slots:
        void play(); 

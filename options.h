@@ -58,6 +58,10 @@ class Options : public QGraphicsWidget
        void activeRandom(bool);
        void activeRepeat(bool);
        void volumeActived(bool);
+       void volumeChanged(int);
+
+   public slots:
+       void setMeterValue(int);
 };
 
 #endif

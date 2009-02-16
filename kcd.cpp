@@ -44,6 +44,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
 
    m_mediaObject = new Phonon::MediaObject(this);
    m_audioOutput = new Phonon::AudioOutput(Phonon::NoCategory, this);
+   m_audioOutput->setVolume(1);
    m_mediaObject->setTickInterval(1000);
    m_mediaController = new Phonon::MediaController(m_mediaObject);
    Phonon::createPath(m_mediaObject, m_audioOutput);
@@ -65,14 +66,16 @@ void Kcd::init()
    m_textPanel = new InfoPanel(this);
    m_controlsPanel = new Controls(this);
    m_optionsPanel = new Options(this);
+   m_optionsPanel->setMeterValue(10);
    m_positionSlider = new Plasma::Slider(this);
    m_positionSlider->setOrientation(Qt::Horizontal);
    m_positionSlider->setMinimum(0);
    m_positionSlider->setMaximum(0);
    m_positionSlider->setValue(0);
-   //m_volume = new VolumeController(Qt::Horizontal, this);
+
+   setupActions();
   
-   Plasma::ExtenderItem *listItem = new Plasma::ExtenderItem(extender());
+   Plasma::ExtenderItem* listItem = new Plasma::ExtenderItem(extender());
    listItem->setName("trackslist");
    initExtenderItem(listItem);
 
@@ -86,7 +89,6 @@ void Kcd::init()
             this, SLOT(handleCd(const Phonon::MediaSource&)));
    cdHandler->checkForPreviousDevices();
 
-   setupActions();
 }
 
 void Kcd::initExtenderItem(Plasma::ExtenderItem *item) {
@@ -124,6 +126,12 @@ void Kcd::setupActions()
    connect(m_optionsPanel, SIGNAL(activeRandom(bool)), this, SLOT(randomEnabled(bool)));
    connect(m_optionsPanel, SIGNAL(activeRepeat(bool)), this, SLOT(repeatEnabled(bool)));
    connect(m_optionsPanel, SIGNAL(volumeActived(bool)), this, SLOT(enableVolume(bool)));
+   connect(m_optionsPanel, SIGNAL(volumeChanged(int)), this, SLOT(updateVolume(int)));
+}
+
+void Kcd::updateVolume(int value)
+{
+   m_audioOutput->setVolume(value / 10.0);
 }
 
 void Kcd::insertMetaData()
@@ -249,7 +257,7 @@ void Kcd::repeatSource()
 
 void Kcd::viewTrackList()
 {
-   //tracksDialog->setVisible(!tracksDialog()->isVisible());
+
 }
 
 
