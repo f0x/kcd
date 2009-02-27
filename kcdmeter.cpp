@@ -25,7 +25,7 @@
 KcdMeter::KcdMeter(QGraphicsWidget *parent)
     : Plasma::Meter(parent)
 {
-    setMaximumHeight(25);
+    setMaximumWidth(20);
 }
 
 KcdMeter::~KcdMeter() {

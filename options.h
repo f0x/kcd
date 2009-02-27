@@ -24,10 +24,11 @@
 
 namespace Plasma {
    class IconWidget;
+   class Label;
 }
 
 class QGraphicsLinearLayout;
-class KcdMeter;
+//class KcdMeter;
 
 class Options : public QGraphicsWidget
 {
@@ -38,30 +39,32 @@ class Options : public QGraphicsWidget
        ~Options();
 
    private:
-       Plasma::IconWidget* m_volume;
-       KcdMeter *m_meter;
-       Plasma::IconWidget* m_tracklist;
+       Plasma::Label* m_albumText;
+       //Plasma::IconWidget* m_volume;
+       //KcdMeter *m_meter;
+       //Plasma::IconWidget* m_tracklist;
        Plasma::IconWidget* m_random;
        Plasma::IconWidget* m_loop;
  
        bool randomFlag;
        bool loopFlag;
-       bool volumeFlag;
+       //bool volumeFlag;
 
    private slots:
        void randomTrack();
        void loopList();
-       void handleVolume();
+       //void handleVolume();
 
    signals:
-       void showTrackList();
+       //void showTrackList();
        void activeRandom(bool);
        void activeRepeat(bool);
-       void volumeActived(bool);
-       void volumeChanged(int);
+       //void volumeActived(bool);
+       //void volumeChanged(int);
 
    public slots:
-       void setMeterValue(int);
+       //void setMeterValue(int);
+       void updateAlbumTitle(QString);
 };
 
 #endif

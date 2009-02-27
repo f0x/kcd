@@ -33,7 +33,7 @@ Controls::Controls(QGraphicsWidget *parent)
 {
    m_playpause->setIcon("media-playback-start");
    connect(m_playpause, SIGNAL(clicked()), this, SLOT(playPauseClicked()));
-   m_playpause->setMinimumSize(m_playpause->sizeFromIconSize(16));
+   m_playpause->setMinimumSize(m_playpause->sizeFromIconSize(32) * 1.5);
    m_stop->setIcon("media-playback-stop");
    connect(m_stop, SIGNAL(clicked()), this, SIGNAL(stop()));
    m_stop->setMinimumSize(m_stop->sizeFromIconSize(16));
@@ -125,8 +125,8 @@ void Controls::setDisplayedButtons(Buttons buttons)
    delete layout();
 
    QGraphicsLinearLayout* newLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-   newLayout->setMinimumSize(100, 40);
-   newLayout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+   //newLayout->setMinimumSize(100, 100);
+   //newLayout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
    showHideButton(newLayout, m_prev, (buttons & PreviousButton));
    showHideButton(newLayout, m_playpause, (buttons & PlayPauseButton));

@@ -18,12 +18,15 @@
 */
 
 #include "options.h"
-#include "kcdmeter.h"
+//#include "kcdmeter.h"
 
 #include <Plasma/IconWidget>
 #include <Plasma/ToolTipManager>
+#include <Plasma/Label>
+#include <Plasma/Theme>
 
 #include <QGraphicsLinearLayout>
+#include <QLabel>
 #include <KDebug>
 
 #include <KIcon>
@@ -31,34 +34,34 @@
 
 Options::Options(QGraphicsWidget *parent)
     : QGraphicsWidget(parent),
-      m_volume(new Plasma::IconWidget(this)),
-      m_meter(new KcdMeter(this)),
-      m_tracklist(new Plasma::IconWidget(this)),
+     // m_volume(new Plasma::IconWidget(this)),
+      //m_meter(new KcdMeter(this)),
+      //m_tracklist(new Plasma::IconWidget(this)),
+      m_albumText(new Plasma::Label(this)),
       m_random(new Plasma::IconWidget(this)),
       m_loop(new Plasma::IconWidget(this))
 {
  
-   m_volume->setIcon("audio-volume-high");
-   connect (m_volume, SIGNAL(clicked()), this, SLOT(handleVolume()));
+   //m_volume->setIcon("audio-volume-high");
+   //connect (m_volume, SIGNAL(clicked()), this, SLOT(handleVolume()));
    //m_volume->setMinimumSize(m_random->sizeFromIconSize(10));
 
-   m_meter->setMinimum(0);
-   m_meter->setMaximum(10);
-   m_meter->setMeterType(Plasma::Meter::BarMeterHorizontal);
-   connect (m_meter, SIGNAL(valueChanged(int)), this, SIGNAL(volumeChanged(int)));
+   //m_meter->setMinimum(0);
+   //m_meter->setMaximum(10);
+   //m_meter->setMeterType(Plasma::Meter::BarMeterHorizontal);
+   //connect (m_meter, SIGNAL(valueChanged(int)), this, SIGNAL(volumeChanged(int)));
 
-   m_tracklist->setIcon("format-list-unordered");
-   m_tracklist->setMinimumSize(m_random->sizeFromIconSize(10));
-   connect(m_tracklist, SIGNAL(clicked()), this, SIGNAL(showTrackList()));
+   //m_tracklist->setIcon("format-list-unordered");
+   //m_tracklist->setMinimumSize(m_random->sizeFromIconSize(10));
+   //connect(m_tracklist, SIGNAL(clicked()), this, SIGNAL(showTrackList()));
 
    Plasma::ToolTipContent data;
-   data.setMainText(i18n("Tracklist"));
-   data.setSubText(i18n("View the tracklist"));
-   data.setImage(KIcon("format-list-unordered").pixmap(IconSize(KIconLoader::Desktop)));
-   Plasma::ToolTipManager::self()->setContent(m_tracklist, data);
+   //data.setMainText(i18n("Tracklist"));
+   //data.setSubText(i18n("View the tracklist"));
+   //data.setImage(KIcon("format-list-unordered").pixmap(IconSize(KIconLoader::Desktop)));
+   //Plasma::ToolTipManager::self()->setContent(m_tracklist, data);
 
    m_random->setIcon("roll");
-   m_random->setMinimumSize(m_random->sizeFromIconSize(10));
    connect(m_random, SIGNAL(clicked()), this, SLOT(randomTrack()));
    
    data.setMainText(i18n("Random - off"));
@@ -67,7 +70,6 @@ Options::Options(QGraphicsWidget *parent)
    Plasma::ToolTipManager::self()->setContent(m_random, data);
 
    m_loop->setIcon("object-rotate-right");
-   m_loop->setMinimumSize(m_loop->sizeFromIconSize(10));
    connect(m_loop, SIGNAL(clicked()), this, SLOT(loopList()));
 
    data.setMainText(i18n("Repeat - off"));
@@ -77,22 +79,35 @@ Options::Options(QGraphicsWidget *parent)
 
    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
    layout->setOrientation(Qt::Horizontal);
-   layout->addItem(m_volume);
-   layout->addItem(m_meter);
+   //layout->addItem(m_volume);
+   //layout->addItem(m_meter);
+   layout->addItem(m_albumText);
    layout->addItem(m_random);
    layout->addItem(m_loop);
-   layout->addItem(m_tracklist);
-   layout->setStretchFactor(m_meter, 20);
-   layout->setSpacing(0);
+   layout->setAlignment(m_albumText, Qt::AlignLeft);
    layout->setAlignment(m_random, Qt::AlignRight);
    layout->setAlignment(m_loop, Qt::AlignRight);
-   layout->setAlignment(m_tracklist, Qt::AlignRight);
-   layout->setItemSpacing(1, 10);
+   layout->setStretchFactor(m_random, 0);
+   layout->setStretchFactor(m_loop, 0);
+   setPreferredHeight(35);
+   
+   //layout->setItemSpacing(0, 50);
+  
+  
+   //layout->addItem(m_tracklist);
+   //layout->setStretchFactor(m_meter, 20);
+   //layout->setSpacing(0);
+   //layout->setAlignment(m_random, Qt::AlignRight);
+   //layout->setAlignment(m_loop, Qt::AlignRight);
+   //layout->setAlignment(m_tracklist, Qt::AlignRight);
+   //layout->setItemSpacing(1, 10);
    setLayout(layout);
 
    randomFlag = false;
    loopFlag = false;
-   volumeFlag = true;
+   //volumeFlag = true;
+
+   
 }
 
 Options::~Options()
@@ -138,20 +153,35 @@ void Options::loopList()
    Plasma::ToolTipManager::self()->setContent(m_loop, data);
 }
 
-void Options::handleVolume()
+void Options::updateAlbumTitle(QString title)
 {
-  if (volumeFlag) {
-     m_volume->setIcon("audio-volume-muted");
-     volumeFlag = false;
-     emit volumeActived(false);
-  } else {
-     m_volume->setIcon("audio-volume-high");
-     volumeFlag = true;
-     emit volumeActived(true);
-  }
+   Plasma::Theme *theme = Plasma::Theme::defaultTheme();
+   QFont font = theme->font(Plasma::Theme::DefaultFont);
+   QFontMetricsF fm(font);
+   kDebug() << title;
+   m_albumText->setText(fm.elidedText(title, Qt::ElideMiddle, m_albumText->size().width()));
+   
+   font.setBold(true);
+   font.setItalic(true);
+   font.setStretch(110);
+   m_albumText->nativeWidget()->setFont(font);
+   //m_albumText->setText(title);
 }
 
-void Options::setMeterValue(int value)
-{
-   m_meter->setValue(value);
-}
+// void Options::handleVolume()
+// {
+//   if (volumeFlag) {
+//      m_volume->setIcon("audio-volume-muted");
+//      volumeFlag = false;
+//      emit volumeActived(false);
+//   } else {
+//      m_volume->setIcon("audio-volume-high");
+//      volumeFlag = true;
+//      emit volumeActived(true);
+//   }
+// }
+// 
+// void Options::setMeterValue(int value)
+// {
+//    m_meter->setValue(value);
+// }

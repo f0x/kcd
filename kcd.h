@@ -23,6 +23,7 @@
 namespace Plasma {
     class ExtenderItem;
     class Slider;
+    class Label;
 };
 
 namespace Phonon {
@@ -54,6 +55,8 @@ class Kcd : public Plasma::PopupApplet
        Controls* m_controlsPanel;
        Options* m_optionsPanel;
        Plasma::Slider* m_positionSlider;
+       Plasma::Label* m_timeTotal;
+       Plasma::Label* m_timeCurrent;
        TracksDialog* tracksDialog;
        MBManager* m_MBManager;
        Phonon::MediaObject* m_mediaObject;
@@ -72,12 +75,12 @@ class Kcd : public Plasma::PopupApplet
        void seekTo(int);
        void updateSlider(qint64);
        void playSelected(int);
-       void viewTrackList();
+       //void viewTrackList();
        void randomEnabled(bool);
        void repeatEnabled(bool);
        void repeatSource();
        void randomSource(int);
-       void updateVolume(int);
+       //void updateVolume(int);
 
    public slots:
        void play(); 
@@ -85,7 +88,7 @@ class Kcd : public Plasma::PopupApplet
        void stop();  
        void prev(); 
        void next(); 
-       void enableVolume(bool);
+       //void enableVolume(bool);
 };
  
 K_EXPORT_PLASMA_APPLET(kcd, Kcd)

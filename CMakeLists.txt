@@ -21,7 +21,7 @@ set(kcd_SRCS kcd.cpp
              cdhandler.cpp
              mbmanager.cpp
              options.cpp
-#             volumecontroller.cpp
+             volumecontroller.cpp
              tracksdialog.cpp
              kcdmeter.cpp
 )

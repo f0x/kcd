@@ -26,10 +26,13 @@
 
 namespace Plasma {
     class Label;
+    class IconWidget;
 }
-class QGraphicsLayoutItem;
-class QGraphicsGridLayout;
 
+class QGraphicsLayoutItem;
+class QGraphicsLinearLayout;
+class KcdMeter;
+  
 class InfoPanel : public QGraphicsWidget
 {
     Q_OBJECT
@@ -45,17 +48,18 @@ public slots:
 private:
     void updateLabels();
 
-    Plasma::Label* m_artistLabel;
-    Plasma::Label* m_titleLabel;
-    Plasma::Label* m_albumLabel;
-    Plasma::Label* m_timeLabel;
-
+    //Plasma::Label* m_artistLabel;
+    //Plasma::Label* m_titleLabel;
+    //Plasma::Label* m_albumLabel;
+    //Plasma::Label* m_timeLabel;
+    Plasma::Label* m_cover;
     Plasma::Label* m_artistText;
     Plasma::Label* m_titleText;
-    Plasma::Label* m_albumText;
-    Plasma::Label* m_timeText;
+    Plasma::IconWidget* m_volume;
+    KcdMeter *m_meter;
+    //Plasma::Label* m_albumText;
 
-    QGraphicsGridLayout* m_layout;
+    QGraphicsLinearLayout* m_layout;
     QMap<QString,QString> m_metadata;
 };
 

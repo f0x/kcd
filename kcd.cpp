@@ -22,11 +22,13 @@
 #include "cdhandler.h"
 #include "mbmanager.h"
 #include "options.h"
+//#include "volumecontroller.h"
 
 #include <QGraphicsLinearLayout>
 
 #include <Plasma/Slider>
 #include <Plasma/ExtenderItem>
+#include <Plasma/Label>
 
 #include <Phonon/MediaSource>
 #include <Phonon/MediaObject>
@@ -40,7 +42,7 @@ Kcd::Kcd(QObject *parent, const QVariantList &args)
    setHasConfigurationInterface(false);
    setBackgroundHints(StandardBackground);
 
-   resize(320,235);
+   resize(330,210);
 
    m_mediaObject = new Phonon::MediaObject(this);
    m_audioOutput = new Phonon::AudioOutput(Phonon::NoCategory, this);
@@ -66,12 +68,17 @@ void Kcd::init()
    m_textPanel = new InfoPanel(this);
    m_controlsPanel = new Controls(this);
    m_optionsPanel = new Options(this);
-   m_optionsPanel->setMeterValue(10);
+   //m_optionsPanel->setMeterValue(10);
    m_positionSlider = new Plasma::Slider(this);
    m_positionSlider->setOrientation(Qt::Horizontal);
    m_positionSlider->setMinimum(0);
    m_positionSlider->setMaximum(0);
    m_positionSlider->setValue(0);
+
+   m_timeTotal = new Plasma::Label(this);
+   m_timeTotal->setText("00:00");
+   m_timeCurrent = new Plasma::Label(this);
+   m_timeCurrent->setText("00:00");
 
    setupActions();
   
@@ -79,16 +86,24 @@ void Kcd::init()
    listItem->setName("trackslist");
    initExtenderItem(listItem);
 
+   QGraphicsLinearLayout *hlayout = new QGraphicsLinearLayout();
+   hlayout->setOrientation(Qt::Horizontal);
+   hlayout->addItem(m_controlsPanel);
+   hlayout->addItem(m_timeCurrent);
+   hlayout->addItem(m_positionSlider);
+   hlayout->addItem(m_timeTotal);
+   //hlayout->setAlignment(m_positionSlider, Qt::AlignCenter);
    layout->addItem(m_optionsPanel);
    layout->addItem(m_textPanel);
-   layout->addItem(m_controlsPanel);
-   layout->addItem(m_positionSlider);
+   layout->addItem(hlayout);
+   //layout->addItem(m_positionSlider);
+   //layout->addItem(new VolumeController(Qt::Horizontal, this));
+   
 
    CdHandler *cdHandler = new CdHandler(this);
    connect (cdHandler, SIGNAL(cdInserted(const Phonon::MediaSource&)),
             this, SLOT(handleCd(const Phonon::MediaSource&)));
    cdHandler->checkForPreviousDevices();
-
 }
 
 void Kcd::initExtenderItem(Plasma::ExtenderItem *item) {
@@ -122,17 +137,17 @@ void Kcd::setupActions()
    connect(m_controlsPanel, SIGNAL(previous()), this, SLOT(prev()));
    connect(m_controlsPanel, SIGNAL(next()), this, SLOT(next()));
    connect(m_positionSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekTo(int)));
-   connect(m_optionsPanel, SIGNAL(showTrackList()), this, SLOT(viewTrackList()));
+   //connect(m_optionsPanel, SIGNAL(showTrackList()), this, SLOT(viewTrackList()));
    connect(m_optionsPanel, SIGNAL(activeRandom(bool)), this, SLOT(randomEnabled(bool)));
    connect(m_optionsPanel, SIGNAL(activeRepeat(bool)), this, SLOT(repeatEnabled(bool)));
-   connect(m_optionsPanel, SIGNAL(volumeActived(bool)), this, SLOT(enableVolume(bool)));
-   connect(m_optionsPanel, SIGNAL(volumeChanged(int)), this, SLOT(updateVolume(int)));
+   //connect(m_optionsPanel, SIGNAL(volumeActived(bool)), this, SLOT(enableVolume(bool)));
+   //connect(m_optionsPanel, SIGNAL(volumeChanged(int)), this, SLOT(updateVolume(int)));
 }
 
-void Kcd::updateVolume(int value)
-{
-   m_audioOutput->setVolume(value / 10.0);
-}
+// void Kcd::updateVolume(int value)
+// {
+//    m_audioOutput->setVolume(value / 10.0);
+// }
 
 void Kcd::insertMetaData()
 {   
@@ -142,11 +157,12 @@ void Kcd::insertMetaData()
 
    QMap<QString, QString> metaData;
    metaData["Artist"] = trackInfo.Artist;
-   metaData["Title"] = QString::number(m_mediaController->currentTitle()) + " - " + trackInfo.Title;
+   metaData["Title"] = QString::number(m_mediaController->currentTitle()) + ". " + trackInfo.Title;
    metaData["Time"] = trackInfo.Duration;
    metaData["Album"] = m_MBManager->getDiscInfo().Title;
    //kDebug() << metaData;
    m_textPanel->updateMetadata(metaData);
+   m_optionsPanel->updateAlbumTitle(metaData["Album"]);
    
    m_positionSlider->setMaximum(trackInfo.Duration.toInt() / 1000);
    currentTime(0);
@@ -212,10 +228,10 @@ void Kcd::playSelected(int selection)
    play();
 }
 
-void Kcd::enableVolume(bool active)
-{
-   m_audioOutput->setMuted(!active);
-}
+// void Kcd::enableVolume(bool active)
+// {
+//    m_audioOutput->setMuted(!active);
+// }
 
 void Kcd::randomEnabled(bool random)
 {
@@ -255,10 +271,10 @@ void Kcd::repeatSource()
    m_mediaObject->enqueue(m_mediaObject->currentSource());
 }
 
-void Kcd::viewTrackList()
-{
-
-}
+// void Kcd::viewTrackList()
+// {
+// 
+// }
 
 
 #include "kcd.moc"
